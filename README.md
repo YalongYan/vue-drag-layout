@@ -1,4 +1,4 @@
-# vuex-test
+# vue-slicksort-practice
 
 > A Vue.js project
 
