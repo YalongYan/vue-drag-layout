@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import DragCompent from '@/components/dragList/dragCompent'
 import Single from '@/components/dragItem/single'
 
@@ -86,7 +86,7 @@ export default {
       this.dragCtnIndex = index
       // console.log(this.dragCtnIndex)
     },
-    // ...mapMutations(['dragItemDate.updateLayoutContentItem'])
+    ...mapActions(['updateLayoutContentItem']),
   },
   computed: {
     ...mapState({
@@ -98,7 +98,7 @@ export default {
     DragCompent
   },
   mounted() {
-    // console.log(this.updateLayoutContentItem(111))
+    console.log(this.updateLayoutContentItem(111))
     // this.$store.commit('updateLayoutContentItem');
     // console.log(this.vuexLayoutContentItem)
     // var _this = this
