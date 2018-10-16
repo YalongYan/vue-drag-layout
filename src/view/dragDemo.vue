@@ -86,7 +86,7 @@ export default {
       this.dragCtnIndex = index
       // console.log(this.dragCtnIndex)
     },
-    ...mapActions(['updateLayoutContentItem']),
+    // ...mapActions(['updateLayoutContentItem'])
   },
   computed: {
     ...mapState({
@@ -98,7 +98,7 @@ export default {
     DragCompent
   },
   mounted() {
-    console.log(this.updateLayoutContentItem(111))
+    // console.log(this.updateLayoutContentItem({index: 1, position: 1}))
     // this.$store.commit('updateLayoutContentItem');
     // console.log(this.vuexLayoutContentItem)
     // var _this = this

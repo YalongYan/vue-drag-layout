@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'dragCompent',
   props: {
@@ -35,7 +36,21 @@ export default {
       positionY: 999 // 这是坐标的 y 位置
     }
   },
+   computed: {
+    ...mapState({
+      // layoutContentItem: state => state.dragItemDate.layoutContentItem,
+      vuexPositionY: state => state.dragItemDate.positionY
+    }),
+  },
   methods: {
+    emitLayoutContentItem: function (item) {
+      // var item = {index: 1, position: 1}
+      this.updateLayoutContentItem(item)
+    },
+    emitUpdatePositionY: function (position) {
+      this.updatePositionY(position)
+    },
+    ...mapActions(['updateLayoutContentItem', 'updatePositionY']),
     /*
     ** 
     */
@@ -97,10 +112,17 @@ export default {
             var centerHeadHeight = 30;
             var centerItemHeight = 90;
             if(_this.leftDragItemIsMoving) {
-              // var x = ev.x
               var y = ev.y
+              // yIndex 是鼠标初拖动进入的位置
               var yIndex = parseInt((y-30)/90)
               console.log(yIndex)
+              if (yIndex != _this.vuexPositionY) {
+                _this.emitUpdatePositionY(yIndex)
+                var item = {index: _this.vuexPositionY, position:1}
+                _this.emitLayoutContentItem(item)
+              }
+              // console.log(_this.vuexPositionY)
+              // console.log(yIndex)
               if(y < (yIndex*90 + 30 + 45)){
 
               } else {
