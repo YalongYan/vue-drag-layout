@@ -51,7 +51,7 @@
 </template>
 
 <script>
-// import { mapState, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import DragCompent from '@/components/dragList/dragCompent'
 import Single from '@/components/dragItem/single'
 
@@ -62,7 +62,7 @@ export default {
       cloneLeftItemText: 'aa',
       dragCtnIndex: '999999',
       layoutItem: [{text: '一行两列', icon: 1}, {text: '一行三列', icon: 2}, {text: '表格', icon: 3}, {text: '明细子表', icon: 4}, {text: '分割线', icon: 5}],
-      layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
+      // layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
       // 右边的组件是否被拖动了
       leftDragItemIsDraged: false,
       // 右边的组件是否在容器内移动
@@ -85,23 +85,21 @@ export default {
       // console.log(index)
       this.dragCtnIndex = index
       // console.log(this.dragCtnIndex)
-    }
+    },
+    // ...mapMutations(['dragItemDate.updateLayoutContentItem'])
   },
   computed: {
-    // ...mapState({
-    //   vuexLayoutContentItem: state => state.layoutContentItem,
-    //   // token: state => state.user.token,
-    // })
-    // isShowTabbar() {
-    //   // 根据路由元信息决定是否 显示底部导航栏
-    //   return this.$route.meta.isTab;
-    // }
+    ...mapState({
+      layoutContentItem: state => state.dragItemDate.layoutContentItem
+    }),
   },
   components: {
     Single,
     DragCompent
   },
   mounted() {
+    // console.log(this.updateLayoutContentItem(111))
+    // this.$store.commit('updateLayoutContentItem');
     // console.log(this.vuexLayoutContentItem)
     // var _this = this
     // setTimeout(function() {
