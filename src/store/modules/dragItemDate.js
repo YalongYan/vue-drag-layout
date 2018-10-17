@@ -3,7 +3,7 @@ const LAYOUT_CONTENT_ITEM = 'LAYOUT_CONTENT_ITEM';
 const UPDATE_POSITION_Y = 'UPDATE_POSITION_Y';
 const state = {
   layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
-  positionY: 9999
+  positionY: 999
 };
 
 const actions = {

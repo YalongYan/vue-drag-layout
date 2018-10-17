@@ -79,6 +79,7 @@ export default {
     middleOnmouseOut: function (event) {
       if (this.leftDragItemIsDraged) {
         this.leftDragItemIsMoving =false
+        this.emitUpdatePositionY(999)
       }
     },
     dragCompentClick: function(index) {
@@ -87,6 +88,10 @@ export default {
       // console.log(this.dragCtnIndex)
     },
     // ...mapActions(['updateLayoutContentItem'])
+    ...mapActions(['updatePositionY']),
+    emitUpdatePositionY: function (index) {
+      this.updatePositionY(index)
+    },
   },
   computed: {
     ...mapState({

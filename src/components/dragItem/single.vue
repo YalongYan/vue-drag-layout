@@ -1,5 +1,8 @@
 <template>
-  <div class="form-view" @click='dragCompentClick()'  @mousedown="mousedown($event, item)">
+  <div class="form-view" @click='dragCompentClick()'
+  @mousedown="mousedown($event, item)"
+  @mouseenter = "middleOnmouseEnter($event)"
+  @mouseleave = "middleOnmouseLeave($event)">
     <!-- <div class="field field_js field-active"> -->  
     <div class="prefabricatedCtn prefabricatedUp" v-if="item.upActive"></div>
     <div class="innerCtn">
@@ -13,7 +16,7 @@
           <span class="widget-title_js" style="color:;font-size:13;">{{item.text}}</span>
           <i class="iconfont icon-pencil j_edit-title edit-title">B</i>
         </div>
-        <div class="widget-content">	
+        <div class="widget-content">  
           <input type="text" class="form-control large" readonly=""> (%)
         </div>
       </div>
@@ -24,6 +27,7 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'Single',
   // prop: ['item', 'index'],
@@ -46,10 +50,25 @@ export default {
       init_node: ''    //初始的节点 
     }
   },
+  computed: {
+    ...mapState({
+      positionY: state => state.dragItemDate.positionY
+    }),
+  },
   methods: {
     /*
     ** 
     */
+   ...mapActions(['updatePositionY']),
+   emitUpdatePositionY: function (index) {
+     this.updatePositionY(index)
+   },
+   middleOnmouseEnter: function (event) {
+     this.emitUpdatePositionY(this.index)
+   },
+   middleOnmouseLeave: function (event) {
+    this.emitUpdatePositionY(999)
+   },
     mousedown: function (event, site) {
       // console.log(site)
       // site.active =!site.active

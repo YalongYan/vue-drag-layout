@@ -107,28 +107,32 @@ export default {
             _this.$emit("input",_this.item.text);
             cloneLeftCtnItem.style.display = 'block'
             
-            // 这里开始计算坐标位置 移动的时候 计算出坐标位置进行交互
+            // start 这里开始计算坐标位置 移动的时候 计算出坐标位置进行交互
             var leftContainerWidth = 250;
             var centerHeadHeight = 30;
             var centerItemHeight = 90;
             if(_this.leftDragItemIsMoving) {
               var y = ev.y
               // yIndex 是鼠标初拖动进入的位置
-              var yIndex = parseInt((y-30)/90)
-              console.log(yIndex)
-              if (yIndex != _this.vuexPositionY) {
-                _this.emitUpdatePositionY(yIndex)
-                var item = {index: _this.vuexPositionY, position:1}
-                _this.emitLayoutContentItem(item)
+              // var yIndex = parseInt((y-30)/90)
+              var middlePositon_y = _this.vuexPositionY * 90 + 45 + 30
+              var item = {index: _this.vuexPositionY, position: ''}
+              if (y < middlePositon_y) {
+                item.position = 1
+              } else {
+                item.position = 2
               }
+              console.log(item)
+              _this.emitLayoutContentItem(item)
+              // if (yIndex != _this.vuexPositionY) {
+              //   _this.emitUpdatePositionY(yIndex)
+              //   var item = {index: _this.vuexPositionY, position:1}
+              //   _this.emitLayoutContentItem(item)
+              // }
               // console.log(_this.vuexPositionY)
               // console.log(yIndex)
-              if(y < (yIndex*90 + 30 + 45)){
-
-              } else {
-                
-              }
             }
+            // end 这里开始计算坐标位置 移动的时候 计算出坐标位置进行交互
           }
         }
         document.onmouseup=function (ev) {
@@ -137,6 +141,7 @@ export default {
           _this.thisLeftDragItemIsDraged = false
           _target.style.zIndex = '';
           console.log('mouseup')
+          console.log(_this.vuexPositionY)
           document.onmouseup=null;
           cloneLeftCtnItem.style.display = 'none'
         }
