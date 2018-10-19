@@ -1,9 +1,11 @@
-// import types from '../mutation-types';
+//   ss  import types from '../mutation-types';
 const LAYOUT_CONTENT_ITEM = 'LAYOUT_CONTENT_ITEM';
 const UPDATE_POSITION_Y = 'UPDATE_POSITION_Y';
+const UPDATE_ITEM_IS_MOVING = 'UPDATE_ITEM_IS_MOVING';
 const state = {
   layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
-  positionY: 999
+  positionY: 999,
+  itemIsMoving: false
 };
 
 const actions = {
@@ -24,6 +26,9 @@ const actions = {
       position = layoutContentItemLength
     }
     commit(UPDATE_POSITION_Y, position);
+  },
+  updateItemIsMoving({ commit }, bool) {
+    commit(UPDATE_ITEM_IS_MOVING, bool);
   }
 };
 
@@ -31,6 +36,7 @@ const getters = {
   // loginStatus: state => state.loginStatus,
   layoutContentItem: state => state.layoutContentItem,
   positionY: state => state.positionY,
+  itemIsMoving: state => state.itemIsMoving,
 };
 
 const mutations = {
@@ -57,6 +63,9 @@ const mutations = {
   },
   [UPDATE_POSITION_Y](state, position) {
     state.positionY = position
+  },
+  [UPDATE_ITEM_IS_MOVING](state, bool) {
+    state.itemIsMoving = bool
   }
 };
 

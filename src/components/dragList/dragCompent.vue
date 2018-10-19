@@ -47,10 +47,11 @@ export default {
       // var item = {index: 1, position: 1}
       this.updateLayoutContentItem(item)
     },
-    emitUpdatePositionY: function (position) {
-      this.updatePositionY(position)
-    },
-    ...mapActions(['updateLayoutContentItem', 'updatePositionY']),
+    // emitUpdatePositionY: function (position) {
+    //   this.updatePositionY(position)
+    // },
+    // ...mapActions(['updateLayoutContentItem', 'updatePositionY']),
+    ...mapActions(['updateLayoutContentItem']),
     /*
     ** 
     */
@@ -123,6 +124,7 @@ export default {
                 item.position = 2
               }
               console.log(item)
+              // 这里触发修改vuex里面的数据
               _this.emitLayoutContentItem(item)
               // if (yIndex != _this.vuexPositionY) {
               //   _this.emitUpdatePositionY(yIndex)

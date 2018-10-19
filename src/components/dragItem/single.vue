@@ -1,5 +1,8 @@
 <template>
-  <div class="form-view" @click='dragCompentClick()'
+  <!-- pointEventNone 是为了去掉该组件本身的鼠标事件 -->
+  <div class="form-view"
+  :class="{pointEventNone: ismoving}"
+  @click='dragCompentClick()'
   @mousedown="mousedown($event, item)"
   @mouseenter = "middleOnmouseEnter($event)"
   @mouseleave = "middleOnmouseLeave($event)">
@@ -52,19 +55,48 @@ export default {
   },
   computed: {
     ...mapState({
-      positionY: state => state.dragItemDate.positionY
+      vuexPositionY: state => state.dragItemDate.positionY,
+      vuexItemIsMoving: state => state.dragItemDate.itemIsMoving
     }),
   },
   methods: {
     /*
     ** 
     */
-   ...mapActions(['updatePositionY']),
+  //  ...mapActions(['updatePositionY']),
+    emitLayoutContentItem: function (item) {
+      // var item = {index: 1, position: 1}
+      this.updateLayoutContentItem(item)
+    },
+    ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving']),
+    // ...mapActions(['updateLayoutContentItem']),
+
    emitUpdatePositionY: function (index) {
      this.updatePositionY(index)
    },
+   emitUpdateItemIsMoving: function (bool) {
+     this.updateItemIsMoving(bool)
+   },
    middleOnmouseEnter: function (event) {
      this.emitUpdatePositionY(this.index)
+     var _this = this
+     var leftContainerWidth = 250;
+      var centerHeadHeight = 30;
+      var centerItemHeight = 90;
+      var y = event.y
+      // yIndex 是鼠标初拖动进入的位置
+      // var yIndex = parseInt((y-30)/90)
+      var middlePositon_y = _this.vuexPositionY * 90 + 45 + 30
+      var item = {index: _this.vuexPositionY, position: ''}
+      if (y < middlePositon_y) {
+        item.position = 1
+      } else {
+        item.position = 2
+      }
+      // 这里触发修改vuex里面的数据
+      if (_this.vuexItemIsMoving) {
+        _this.emitLayoutContentItem(item)
+      }
    },
    middleOnmouseLeave: function (event) {
     this.emitUpdatePositionY(999)
@@ -96,6 +128,7 @@ export default {
       var targetWidth = this.$el.clientWidth
       var targetHeight = this.$el.clientHeight
       this.ismoving = true
+      this.emitUpdateItemIsMoving(true)
 
       if (event.preventDefault) {
         event.preventDefault();
@@ -114,7 +147,7 @@ export default {
             if (event.clientY < 0 || event.clientX < 0 || event.clientY > wh || event.clientX > ww) {
               return false;
             };
-            console.log(event)
+            // console.log(11)
             var endx=event.clientX-sb_bkx;
             var endy=event.clientY-sb_bky;
             _target.style.width=targetWidth+'px';
@@ -135,19 +168,14 @@ export default {
         }
         document.onmouseup=function (ev) {
           _this.ismoving =false
+          _this.emitUpdateItemIsMoving(false)
           document.onmouseup=null;
-          localStorage.ismoving = 0
           _target.style.border=''
-          // _target.style.width=''
-          // _target.style.height=''
-          // // _target.style.position=''
-          // _target.style.zIndex=''
         }
     },
     mouseup: function (event, site) {
       document.onmousemove=null;
       site.isFixed = false;
-      // console.log(event.target)
     },
 
     mouseover: function (event, site) {
@@ -266,5 +294,8 @@ export default {
     .field_js{
       background:white;
     }
+}
+.pointEventNone{
+  pointer-events: none;
 }
 </style>
