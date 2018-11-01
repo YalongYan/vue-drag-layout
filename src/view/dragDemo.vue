@@ -94,7 +94,7 @@ export default {
     },
   },
   computed: {
-    ...mapState({
+    ...mapState({ 
       layoutContentItem: state => state.dragItemDate.layoutContentItem
     }),
   },

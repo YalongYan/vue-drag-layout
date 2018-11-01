@@ -68,7 +68,7 @@ export default {
       // var item = {index: 1, position: 1}
       this.updateLayoutContentItem(item)
     },
-    ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving']),
+    ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving', 'changeLayoutContentItem']),
     // ...mapActions(['updateLayoutContentItem']),
 
    emitUpdatePositionY: function (index) {
@@ -78,28 +78,30 @@ export default {
      this.updateItemIsMoving(bool)
    },
    middleOnmouseEnter: function (event) {
+     console.log('mouseEnter')
      this.emitUpdatePositionY(this.index)
-     var _this = this
-     var leftContainerWidth = 250;
-      var centerHeadHeight = 30;
-      var centerItemHeight = 90;
-      var y = event.y
-      // yIndex 是鼠标初拖动进入的位置
-      // var yIndex = parseInt((y-30)/90)
-      var middlePositon_y = _this.vuexPositionY * 90 + 45 + 30
-      var item = {index: _this.vuexPositionY, position: ''}
-      if (y < middlePositon_y) {
-        item.position = 1
-      } else {
-        item.position = 2
-      }
-      // 这里触发修改vuex里面的数据
-      if (_this.vuexItemIsMoving) {
-        _this.emitLayoutContentItem(item)
-      }
+    //  var _this = this
+    //  var leftContainerWidth = 250;
+    //   var centerHeadHeight = 30;
+    //   var centerItemHeight = 90;
+    //   var y = event.y
+    //   // yIndex 是鼠标初拖动进入的位置
+    //   // var yIndex = parseInt((y-30)/90)
+    //   var middlePositon_y = _this.vuexPositionY * 90 + 45 + 30
+    //   var item = {index: _this.vuexPositionY, position: ''}
+    //   if (y < middlePositon_y) {
+    //     item.position = 1
+    //   } else {
+    //     item.position = 2
+    //   }
+    //   // 这里触发修改vuex里面的数据
+    //   if (_this.vuexItemIsMoving) {
+    //     _this.emitLayoutContentItem(item)
+    //   }
    },
    middleOnmouseLeave: function (event) {
-    this.emitUpdatePositionY(999)
+    // this.emitUpdatePositionY(999)
+    // console.log(11111)
    },
     mousedown: function (event, site) {
       // console.log(site)
@@ -139,20 +141,21 @@ export default {
         // var scrolltop=document.documentElement.scrol
         document.onmousemove=function (ev) {
           if (_this.ismoving) {
-            //用 localStorage 把move的状态存储起来
-            // localStorage.ismoving = 1
             site.isFixed =true
             site.showUp =true
             var event=ev||window.event;
             if (event.clientY < 0 || event.clientX < 0 || event.clientY > wh || event.clientX > ww) {
               return false;
             };
-            // console.log(11)
+            // console.log(_this.vuexPositionY)
+            // 这是父节点
             var endx=event.clientX-sb_bkx;
             var endy=event.clientY-sb_bky;
-            _target.style.width=targetWidth+'px';
-            _target.style.height=targetHeight+'px';
-            _target.style.border='1px dashed red'
+            // _target.style.width=targetWidth+'px';
+            // _target.style.height=0;
+            // _target.style.height=targetHeight+'px';
+
+            // _target.style.border='1px dashed red'
             childeNode.style.left=endx+'px';
             childeNode.style.top=endy+'px';
             childeNode.style.width=targetWidth+'px';
@@ -164,6 +167,35 @@ export default {
             // if(_this.leftDragItemIsMoving) {
             //   console.log(ev)
             // }
+            var leftContainerWidth = 250;
+            var centerHeadHeight = 30;
+            var centerItemHeight = 90;
+            // var y = ev.offsetY - 45
+            var y = ev.y
+            // console.log(ev)
+            // yIndex 是鼠标初拖动进入的位置
+            // var yIndex = parseInt((y-30)/90)
+            var temp = _this.vuexPositionY
+            // if (y > temp * 90 + 45 + 30) {
+            //   var middlePositon_y = temp * 90 + 45 + 30 + 45
+            // } else {
+            //   var middlePositon_y = temp * 90 + 45 + 30
+            // }
+            var middlePositon_y = _this.vuexPositionY * 90 + 45 + 30
+            // var middlePositon_y = _this.vuexPositionY * 90 + 45 + 30 + 45
+            var item = {index: _this.vuexPositionY, position: ''}
+            console.log('vuexPositionY' + _this.vuexPositionY + 'y:' + y + 'middlePositon_y' + middlePositon_y)
+            if (y < middlePositon_y) {
+              item.position = 1
+            } else {
+              item.position = 2
+            }
+            // 这里触发修改vuex里面的数据
+            if (_this.vuexItemIsMoving) {
+              // console.log(item.index + '  ' + item.position)
+              _this.emitLayoutContentItem(item)
+            }
+
           }
         }
         document.onmouseup=function (ev) {
@@ -171,6 +203,15 @@ export default {
           _this.emitUpdateItemIsMoving(false)
           document.onmouseup=null;
           _target.style.border=''
+          _this.changeLayoutContentItem()
+         
+          childeNode.style.left=''
+          childeNode.style.top='';
+          childeNode.style.width='';
+          childeNode.style.height='';
+          childeNode.style.position=''
+          childeNode.style.zIndex=0
+          childeNode.style.background=''
         }
     },
     mouseup: function (event, site) {

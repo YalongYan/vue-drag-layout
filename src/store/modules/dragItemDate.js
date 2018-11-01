@@ -2,6 +2,7 @@
 const LAYOUT_CONTENT_ITEM = 'LAYOUT_CONTENT_ITEM';
 const UPDATE_POSITION_Y = 'UPDATE_POSITION_Y';
 const UPDATE_ITEM_IS_MOVING = 'UPDATE_ITEM_IS_MOVING';
+const CHANGE_LAYOUT_CONTENT_ITEM = 'CHANGE_LAYOUT_CONTENT_ITEM';
 const state = {
   layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
   positionY: 999,
@@ -19,6 +20,9 @@ const actions = {
       position.index = layoutContentItemLength
     }
     commit(LAYOUT_CONTENT_ITEM, item);
+  },
+  changeLayoutContentItem({ commit }) {
+    commit(CHANGE_LAYOUT_CONTENT_ITEM);
   },
   updatePositionY({ commit }, position) {
     var layoutContentItemLength = state.layoutContentItem.length - 1
@@ -59,13 +63,18 @@ const mutations = {
       data[index].downActive = true
       data[index].upActive = false
     }
-    console.log(data[index])
+    // console.log(data[index])
   },
   [UPDATE_POSITION_Y](state, position) {
     state.positionY = position
   },
   [UPDATE_ITEM_IS_MOVING](state, bool) {
     state.itemIsMoving = bool
+  },
+  [CHANGE_LAYOUT_CONTENT_ITEM](state) {
+    // console.log(state)
+    // state.layoutContentItem = [ {text: '1111', upActive: false, downActive: false},{text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '555555', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}]
+    // state.itemIsMoving = bool
   }
 };
 
