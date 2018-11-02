@@ -77,47 +77,34 @@ export default {
      this.updateItemIsMoving(bool)
    },
    middleOnmouseEnter: function (event) {
-     console.log('mouseEnter')
-     this.emitUpdatePositionY(this.index)
-    //  var _this = this
-    //  var leftContainerWidth = 250;
-    //   var centerHeadHeight = 30;
-    //   var centerItemHeight = 90;
-    //   var y = event.y
-    //   // yIndex 是鼠标初拖动进入的位置
-    //   // var yIndex = parseInt((y-30)/90)
-    //   var middlePositon_y = _this.vuexPositionY * 90 + 45 + 30
-    //   var item = {index: _this.vuexPositionY, position: ''}
-    //   if (y < middlePositon_y) {
-    //     item.position = 1
-    //   } else {
-    //     item.position = 2
-    //   }
-    //   // 这里触发修改vuex里面的数据
-    //   if (_this.vuexItemIsMoving) {
-    //     _this.emitLayoutContentItem(item)
-    //   }
+    if (this.vuexItemIsMoving) {
+      // console.log(this.index)
+      var vuexPositionY = this.vuexPositionY
+      var _index = this.index
+      var item = {index: _index, position: ''}
+      if (_index > vuexPositionY) {
+        item.position = 1
+      } else {
+        item.position = 2
+      }
+      this.emitLayoutContentItem(item)
+      this.emitUpdatePositionY(this.index)
+    }
    },
    middleOnmouseLeave: function (event) {
     // this.emitUpdatePositionY(999)
     // console.log(11111)
    },
     mousedown: function (event, site) {
-      // console.log(site)
-      // site.active =!site.active
       var _this = this
       var _site = site
       var event=event||window.event;
       var _target = event.currentTarget
-      // console.log(_target)
-      // console.log(this)
+
       var childeNode = this.$el.childNodes[2]
-      // console.log(this.$el.childNodes)
-      // var startx=event.clientX;
+
       var startx=event.x;
       var starty=event.y;
-      // var _offsetLeft = this.$el.offsetLeft
-      // var _offsetTop = this.$el.offsetTop
       var _offsetLeft = childeNode.offsetLeft
       var _offsetTop = childeNode.offsetTop
       // var starty=event.clientY;
@@ -140,6 +127,18 @@ export default {
         // var scrolltop=document.documentElement.scrol
         document.onmousemove=function (ev) {
           if (_this.ismoving) {
+            // console.log(_this.index)
+            _this.emitUpdatePositionY(_this.index)
+            console.log(_this.index)
+            var item = {index: _this.index, position: 1}
+            // if (_index > vuexPositionY) {
+            //   item.position = 1
+            // } else {
+            //   item.position = 2
+            // }
+            // _this.emitLayoutContentItem(item)
+
+            // console.log(_this.vuexPositionY)
             site.isFixed =true
             site.showUp =true
             var event=ev||window.event;
@@ -150,11 +149,7 @@ export default {
             // 这是父节点
             var endx=event.clientX-sb_bkx;
             var endy=event.clientY-sb_bky;
-            // _target.style.width=targetWidth+'px';
-            // _target.style.height=0;
-            // _target.style.height=targetHeight+'px';
 
-            // _target.style.border='1px dashed red'
             childeNode.style.left=endx+'px';
             childeNode.style.top=endy+'px';
             childeNode.style.width=targetWidth+'px';
@@ -162,39 +157,6 @@ export default {
             childeNode.style.position='fixed'
             childeNode.style.zIndex=2
             childeNode.style.background='white'
-            // console.log('1111' + _this.thisLeftDragItemIsMoving)
-            // if(_this.leftDragItemIsMoving) {
-            //   console.log(ev)
-            // }
-            var leftContainerWidth = 250;
-            var centerHeadHeight = 30;
-            var centerItemHeight = 90;
-            // var y = ev.offsetY - 45
-            var y = ev.y
-            // console.log(ev)
-            // yIndex 是鼠标初拖动进入的位置
-            // var yIndex = parseInt((y-30)/90)
-            var temp = _this.vuexPositionY
-            // if (y > temp * 90 + 45 + 30) {
-            //   var middlePositon_y = temp * 90 + 45 + 30 + 45
-            // } else {
-            //   var middlePositon_y = temp * 90 + 45 + 30
-            // }
-            var middlePositon_y = _this.vuexPositionY * 90 + 45 + 30
-            // var middlePositon_y = _this.vuexPositionY * 90 + 45 + 30 + 45
-            var item = {index: _this.vuexPositionY, position: ''}
-            console.log('vuexPositionY' + _this.vuexPositionY + 'y:' + y + 'middlePositon_y' + middlePositon_y)
-            if (y < middlePositon_y) {
-              item.position = 1
-            } else {
-              item.position = 2
-            }
-            // 这里触发修改vuex里面的数据
-            if (_this.vuexItemIsMoving) {
-              // console.log(item.index + '  ' + item.position)
-              _this.emitLayoutContentItem(item)
-            }
-
           }
         }
         document.onmouseup=function (ev) {

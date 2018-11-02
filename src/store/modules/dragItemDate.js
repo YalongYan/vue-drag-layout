@@ -1,12 +1,15 @@
+// import { stat } from "fs";
 //   ss  import types from '../mutation-types';
 const LAYOUT_CONTENT_ITEM = 'LAYOUT_CONTENT_ITEM';
 const UPDATE_POSITION_Y = 'UPDATE_POSITION_Y';
 const UPDATE_ITEM_IS_MOVING = 'UPDATE_ITEM_IS_MOVING';
 const CHANGE_LAYOUT_CONTENT_ITEM = 'CHANGE_LAYOUT_CONTENT_ITEM';
+const UPDATE_LEFT_DRAG_ITEM_ISMOVING = 'UPDATE_LEFT_DRAG_ITEM_ISMOVING';
 const state = {
   layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
   positionY: 999,
-  itemIsMoving: false
+  itemIsMoving: false, // 中间布局的item 是否被拖动
+  leftDragItemIsMoving: false // 左侧的item是否被拖动
 };
 
 const actions = {
@@ -17,7 +20,7 @@ const actions = {
   updateLayoutContentItem({ commit }, item) {
     var layoutContentItemLength = state.layoutContentItem.length - 1
     if (item.index > layoutContentItemLength) {
-      position.index = layoutContentItemLength
+      item.index = layoutContentItemLength
     }
     commit(LAYOUT_CONTENT_ITEM, item);
   },
@@ -33,6 +36,9 @@ const actions = {
   },
   updateItemIsMoving({ commit }, bool) {
     commit(UPDATE_ITEM_IS_MOVING, bool);
+  },
+  updateLeftDragItemIsMoving({commit}, bool) {
+    commit(UPDATE_LEFT_DRAG_ITEM_ISMOVING, bool);
   }
 };
 
@@ -41,6 +47,7 @@ const getters = {
   layoutContentItem: state => state.layoutContentItem,
   positionY: state => state.positionY,
   itemIsMoving: state => state.itemIsMoving,
+  leftDragItemIsMoving: state => state.leftDragItemIsMoving,
 };
 
 const mutations = {
@@ -75,6 +82,9 @@ const mutations = {
     // console.log(state)
     // state.layoutContentItem = [ {text: '1111', upActive: false, downActive: false},{text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '555555', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}]
     // state.itemIsMoving = bool
+  },
+  [UPDATE_LEFT_DRAG_ITEM_ISMOVING](bool) {
+    state.leftDragItemIsMoving = bool
   }
 };
 
