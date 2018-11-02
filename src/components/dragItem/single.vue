@@ -1,14 +1,14 @@
 <template>
   <!-- pointEventNone 是为了去掉该组件本身的鼠标事件 -->
   <div class="form-view"
-  :class="{pointEventNone: ismoving}"
   @click='dragCompentClick()'
-  @mousedown="mousedown($event, item)"
-  @mouseenter = "middleOnmouseEnter($event)"
-  @mouseleave = "middleOnmouseLeave($event)">
+  @mousedown="mousedown($event, item)">
     <!-- <div class="field field_js field-active"> -->  
     <div class="prefabricatedCtn prefabricatedUp" v-if="item.upActive"></div>
-    <div class="innerCtn">
+    <div class="innerCtn"
+      :class="{pointEventNone: ismoving}"
+      @mouseenter = "middleOnmouseEnter($event)"
+      @mouseleave = "middleOnmouseLeave($event)">
       <!-- <div class="field field_js" :class="{'field-active': item.active}"> -->
       <div class="field field_js">
         <span class="widgetDele-btn">

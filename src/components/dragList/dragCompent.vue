@@ -101,7 +101,7 @@ export default {
             var endy=event.clientY-sb_bky;
             var _this_left = _target.style.left
             var _this_top = _target.style.top
-
+  
             cloneLeftCtnItem.style.left = endx+'px';
             cloneLeftCtnItem.style.top = endy+'px';
             fatherNode.append(cloneLeftCtnItem)  
