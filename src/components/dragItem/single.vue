@@ -55,7 +55,8 @@ export default {
   computed: {
     ...mapState({
       vuexPositionY: state => state.dragItemDate.positionY,
-      vuexItemIsMoving: state => state.dragItemDate.itemIsMoving
+      vuexItemIsMoving: state => state.dragItemDate.itemIsMoving,
+      vuexLayoutContentItem: state => state.layoutContentItem
     }),
   },
   methods: {
@@ -88,6 +89,7 @@ export default {
         item.position = 2
       }
       this.emitLayoutContentItem(item)
+      // console.log('aaaa' + this.index)
       this.emitUpdatePositionY(this.index)
     }
    },
@@ -128,7 +130,7 @@ export default {
         document.onmousemove=function (ev) {
           if (_this.ismoving) {
             // console.log(_this.index)
-            _this.emitUpdatePositionY(_this.index)
+            // _this.emitUpdatePositionY(_this.index)
             console.log(_this.index)
             var item = {index: _this.index, position: 1}
             // if (_index > vuexPositionY) {
@@ -157,6 +159,7 @@ export default {
             childeNode.style.position='fixed'
             childeNode.style.zIndex=2
             childeNode.style.background='white'
+            console.log('y' + ev.y + 'positionY' + _this.vuexPositionY)
           }
         }
         document.onmouseup=function (ev) {
