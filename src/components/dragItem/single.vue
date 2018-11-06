@@ -58,6 +58,7 @@ export default {
       vuexItemIsMoving: state => state.dragItemDate.itemIsMoving,
       vuexLeftDragItemIsMoving: state => state.dragItemDate.leftDragItemIsMoving,
       vuexLayoutContentItem: state => state.dragItemDate.layoutContentItem
+      // vuexCenterDraggingItemData: state => state.dragItemDate.centerDraggingItemData
     }),
   },
   methods: {
@@ -73,7 +74,10 @@ export default {
       // var item = {index: 1, position: 1}
       this.updateLayoutContentItem(item)
     },
-    ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving', 'changeLayoutContentItem']),
+    emitChangeLayoutContentItem: function (newState) {
+      this.changeLayoutContentItem(newState)
+    },
+    ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving', 'changeLayoutContentItem', 'updateCenterDraggingItemData']),
     // ...mapActions(['updateLayoutContentItem']),
 
    emitUpdatePositionY: function (index) {
@@ -82,8 +86,12 @@ export default {
    emitUpdateItemIsMoving: function (bool) {
      this.updateItemIsMoving(bool)
    },
+   // 保存中间正在拖动的组件数据
+   emitUpdateCenterDraggingItemData: function (item) {
+     this.updateCenterDraggingItemData(item)
+   },
    middleOnmouseEnter: function (event) {
-     console.log(this.vuexLeftDragItemIsMoving)
+    //  console.log(this.vuexLeftDragItemIsMoving)
     // 中间的组件拖动进入
     if (this.vuexItemIsMoving) {
       var vuexPositionY = this.vuexPositionY
@@ -224,37 +232,8 @@ export default {
           childeNode.style.zIndex=0
           childeNode.style.background=''
           _this.emitUpdatePositionY(999)
+          _this.emitChangeLayoutContentItem('aaaa')
         }
-    },
-    mouseup: function (event, site) {
-      document.onmousemove=null;
-      site.isFixed = false;
-    },
-
-    mouseover: function (event, site) {
-      if (localStorage.ismoving == 1) {
-        // console.log( 'localStorage.initY' + localStorage.initY )
-        console.log( 'over')
-        // console.log( event)
-      }
-
-      // console.log('over')
-
-      // for(var i = 0; i < this.baseData1.length; i++){
-      //   this.baseData1[i].showUp = false
-      // }
-      // for(var j = 0; j< this.baseData2.length; j++){
-      //   this.baseData2[j].showUp = false
-      // }
-      // site.showUp = true
-    },
-    
-    mouseout: function (event, site) {
-      if (localStorage.ismoving == 1) {
-        console.log('out')
-        // console.log( event )
-        // localStorage.initY = event.y
-      }
     },
     dragCompentClick: function() {
       this.$emit('dragCompentClick')

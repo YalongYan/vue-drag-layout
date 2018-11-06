@@ -1,15 +1,17 @@
-// import { stat } from "fs";
-//   ss  import types from '../mutation-types';
-const LAYOUT_CONTENT_ITEM = 'LAYOUT_CONTENT_ITEM';
-const UPDATE_POSITION_Y = 'UPDATE_POSITION_Y';
-const UPDATE_ITEM_IS_MOVING = 'UPDATE_ITEM_IS_MOVING';
-const CHANGE_LAYOUT_CONTENT_ITEM = 'CHANGE_LAYOUT_CONTENT_ITEM';
-const UPDATE_LEFT_DRAG_ITEM_ISMOVING = 'UPDATE_LEFT_DRAG_ITEM_ISMOVING';
+// const LAYOUT_CONTENT_ITEM = 'LAYOUT_CONTENT_ITEM';
+// const UPDATE_POSITION_Y = 'UPDATE_POSITION_Y';
+// const UPDATE_ITEM_IS_MOVING = 'UPDATE_ITEM_IS_MOVING';
+// const CHANGE_LAYOUT_CONTENT_ITEM = 'CHANGE_LAYOUT_CONTENT_ITEM';
+// const UPDATE_LEFT_DRAG_ITEM_ISMOVING = 'UPDATE_LEFT_DRAG_ITEM_ISMOVING';
+// const UPDATE_CENTER_DRAGGING_ITEM_DATA = 'UPDATE_CENTER_DRAGGING_ITEM_DATA';
+// const UPDATE_LEFT_DRAGGING_ITEM_DATA = 'UPDATE_LEFT_DRAGGING_ITEM_DATA';
 const state = {
   layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
   positionY: 999,
   itemIsMoving: false, // 中间布局的item 是否被拖动
-  leftDragItemIsMoving: false // 左侧的item是否被拖动
+  leftDragItemIsMoving: false, // 左侧的item是否被拖动
+  centerDraggingItemData: {}, // 保存中间拖动的组件的数据
+  leftDraggingItemData: {} // 保存左侧拖动的组件的数据 
 };
 
 const actions = {
@@ -18,8 +20,6 @@ const actions = {
   // }
   // item = {index:1, position: 1} position 1 是上 2 是下
   updateLayoutContentItem({ commit }, item) {
-    // console.log(item)
-    // console.log('- - - - - - -- - - - - - -')
     if (item) {
       var layoutContentItemLength = state.layoutContentItem.length - 1
       if (item.index > layoutContentItemLength) {
@@ -28,8 +28,8 @@ const actions = {
       commit(LAYOUT_CONTENT_ITEM, item);
     }
   },
-  changeLayoutContentItem({ commit }) {
-    commit(CHANGE_LAYOUT_CONTENT_ITEM);
+  changeLayoutContentItem({ commit },newState) {
+    commit(CHANGE_LAYOUT_CONTENT_ITEM, newState);
   },
   updatePositionY({ commit }, position) {
     var layoutContentItemLength = state.layoutContentItem.length - 1
@@ -43,6 +43,14 @@ const actions = {
   },
   updateLeftDragItemIsMoving({commit}, bool) {
     commit(UPDATE_LEFT_DRAG_ITEM_ISMOVING, bool);
+  },
+  // 中间拖动的组件的数据
+  updateCenterDraggingItemData({commit}, item) {
+    commit(UPDATE_CENTER_DRAGGING_ITEM_DATA, item);
+  },
+  // 左边拖动的组件的数据
+  updateLeftDraggingItemData({commit}, item) {
+    commit(UPDATE_LEFT_DRAGGING_ITEM_DATA, item);
   }
 };
 
@@ -52,13 +60,15 @@ const getters = {
   positionY: state => state.positionY,
   itemIsMoving: state => state.itemIsMoving,
   leftDragItemIsMoving: state => state.leftDragItemIsMoving,
+  centerDraggingItemData: state => state.centerDraggingItemData,
+  leftDraggingItemData: state => state.leftDraggingItemData
 };
 
 const mutations = {
   // [types.SET_USER_INFO](state, userInfo) {
   //   state.userInfo = userInfo;
   // }
-  [LAYOUT_CONTENT_ITEM](state, item) {
+  ['LAYOUT_CONTENT_ITEM'](state, item) {
     var index = item.index
     var data = state.layoutContentItem
     // 清空初始化
@@ -76,19 +86,17 @@ const mutations = {
     }
     // console.log(data[index])
   },
-  [UPDATE_POSITION_Y](state, position) {
+  ['UPDATE_POSITION_Y'](state, position) {
     state.positionY = position
   },
-  [UPDATE_ITEM_IS_MOVING](state, bool) {
+  ['UPDATE_ITEM_IS_MOVING'](state, bool) {
     state.itemIsMoving = bool
   },
-  [CHANGE_LAYOUT_CONTENT_ITEM](state) {
-    // console.log(state)
-    // state.layoutContentItem = [ {text: '1111', upActive: false, downActive: false},{text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '555555', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}]
-    // state.itemIsMoving = bool
+  ['CHANGE_LAYOUT_CONTENT_ITEM'](state,newState) {
+    state.layoutContentItem = [ {text: '1111', upActive: false, downActive: false},{text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '555555', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}]
+    // state.layoutContentItem = newState
   },
-  [UPDATE_LEFT_DRAG_ITEM_ISMOVING](bool) {
-    console.log(bool)
+  ['UPDATE_LEFT_DRAG_ITEM_ISMOVING'](state, bool) {
     state.leftDragItemIsMoving = bool
   }
 };

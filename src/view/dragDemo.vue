@@ -76,7 +76,6 @@ export default {
       // }
     },
     middleOnmouseOut: function (event) {
-      console.log('out')
     },
     dragCompentClick: function(index) {
       // console.log(index)
