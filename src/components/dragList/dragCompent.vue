@@ -1,8 +1,7 @@
 <template>
-    <li class="mainCtn compents-li" :class="{pointEventNone: isPointEventNone}" @mousedown="mousedown($event, item)">
-        <!-- {{item.icon}} -->
-        <div> {{item.text}} </div>
-    </li>
+  <li class="mainCtn compents-li" :class="{pointEventNone: isPointEventNone}" @mousedown="mousedown($event, item)">
+    <div> {{item.text}} </div>
+  </li>
 </template>
 
 <script>
@@ -17,41 +16,30 @@ export default {
     value: {
       type: String,
       default:''
-    },
-    leftDragItemIsDraged: {
-      type: Boolean,
-      default: false
-    },
-    leftDragItemIsMoving: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
     return {
-      isPointEventNone: false,
-      thisLeftDragItemIsDraged: this.leftDragItemIsDraged,
-      thisLeftDragItemIsMoving: this.leftDragItemIsMoving,
-      positionX: 999, // 这是左边的 x 位置
-      positionY: 999 // 这是坐标的 y 位置
+      isPointEventNone: false
     }
   },
    computed: {
     ...mapState({
-      // layoutContentItem: state => state.dragItemDate.layoutContentItem,
-      vuexPositionY: state => state.dragItemDate.positionY
+      vuexLeftDragItemIsMoving: state => state.dragItemDate.leftDragItemIsMoving,
+      vuexLayoutContentItem: state => state.dragItemDate.layoutContentItem
     }),
   },
   methods: {
-    emitLayoutContentItem: function (item) {
-      // var item = {index: 1, position: 1}
+    emitUpdateLeftDragItemIsMoving: function (bool) {
+      this.updateLeftDragItemIsMoving(bool)
+    },
+    emitUpdatePositionY: function (num) {
+      this.updatePositionY(num)
+    },
+    emitUpdateLayoutContentItem: function (item) {
       this.updateLayoutContentItem(item)
     },
-    // emitUpdatePositionY: function (position) {
-    //   this.updatePositionY(position)
-    // },
-    // ...mapActions(['updateLayoutContentItem', 'updatePositionY']),
-    ...mapActions(['updateLayoutContentItem']),
+    ...mapActions(['updateLeftDragItemIsMoving', 'updatePositionY', 'updateLayoutContentItem']),
     /*
     ** 
     */
@@ -68,11 +56,10 @@ export default {
       var ww = document.documentElement.clientWidth;
       var wh = window.innerHeight;
       this.ismoving = true
+      this.emitUpdateLeftDragItemIsMoving(true)
       // start 这段代码用来复位用的
       var endx=event.clientX-sb_bkx;
       var endy=event.clientY-sb_bky;
-    //   _target.style.left=endx+'px';
-    //   _target.style.top=endy+'px';
       // end
       if (event.preventDefault) {
         event.preventDefault();
@@ -81,13 +68,10 @@ export default {
         event.returnValue=false;
       };
         var cloneLeftCtnItem = document.getElementById('cloneLeftCtnItem')
-        
-        // console.log(cloneLeftCtnItem)
         var fatherNode = event.target.parentElement.parentElement
 
         document.onmousemove=function (ev) {
           if (_this.ismoving) {
-            _this.thisLeftDragItemIsDraged = true
             // fatherNode.append(cloneLeftCtnItem)  
             _this.isPointEventNone = true
             _target.style.zIndex = 99;
@@ -96,7 +80,6 @@ export default {
             if (event.clientY < 0 || event.clientX < 0 || event.clientY > wh || event.clientX > ww) {
               return false;
             };
-            // console.log(_target)
             var endx=event.clientX-sb_bkx;
             var endy=event.clientY-sb_bky;
             var _this_left = _target.style.left
@@ -107,67 +90,42 @@ export default {
             fatherNode.append(cloneLeftCtnItem)  
             _this.$emit("input",_this.item.text);
             cloneLeftCtnItem.style.display = 'block'
-            
-            // start 这里开始计算坐标位置 移动的时候 计算出坐标位置进行交互
-            var leftContainerWidth = 250;
-            var centerHeadHeight = 30;
-            var centerItemHeight = 90;
-            if(_this.leftDragItemIsMoving) {
-              var y = ev.y
-              // yIndex 是鼠标初拖动进入的位置
-              // var yIndex = parseInt((y-30)/90)
-              var middlePositon_y = _this.vuexPositionY * 90 + 45 + 30
-              var item = {index: _this.vuexPositionY, position: ''}
-              if (y < middlePositon_y) {
-                item.position = 1
-              } else {
-                item.position = 2
-              }
-              console.log(item)
-              // 这里触发修改vuex里面的数据
-              _this.emitLayoutContentItem(item)
-              // if (yIndex != _this.vuexPositionY) {
-              //   _this.emitUpdatePositionY(yIndex)
-              //   var item = {index: _this.vuexPositionY, position:1}
-              //   _this.emitLayoutContentItem(item)
-              // }
-              // console.log(_this.vuexPositionY)
-              // console.log(yIndex)
+
+            // start中间组件拖动的上下边界判断
+            var middleHeaderHeight = 30
+            var middleItemHeight = 90
+            var layoutContentItemLength = _this.vuexLayoutContentItem.length
+            var maxHeight = layoutContentItemLength * middleItemHeight
+            var minHeigth = middleHeaderHeight
+            var itemStoreM = {index: '', position: ''}
+            // console.log(itemStoreM)
+            if (ev.y > maxHeight) {
+              itemStoreM.index = layoutContentItemLength - 1
+              itemStoreM.position = 2
+              _this.emitUpdateLayoutContentItem(itemStoreM)
+            } else if (ev.y < minHeigth) {
+              itemStoreM.index = 0
+              itemStoreM.position = 1
+              _this.emitUpdateLayoutContentItem(itemStoreM)
             }
-            // end 这里开始计算坐标位置 移动的时候 计算出坐标位置进行交互
+            // end中间组件拖动的上下边界判断
           }
         }
         document.onmouseup=function (ev) {
           _this.isPointEventNone = false
-          _this.ismoving =false
-          _this.thisLeftDragItemIsDraged = false
+          _this.ismoving = false
+          _this.emitUpdateLeftDragItemIsMoving(false)
           _target.style.zIndex = '';
-          console.log('mouseup')
-          console.log(_this.vuexPositionY)
           document.onmouseup=null;
           cloneLeftCtnItem.style.display = 'none'
+          // mouseup之后  positionY 恢复 999 状态
+          _this.emitUpdatePositionY(999)
         }
     }
-    
   },
-  watch:{
-    leftDragItemIsDraged(val) { 
-      this.thisLeftDragItemIsDraged = val;
-    },
-    thisLeftDragItemIsDraged(val){
-      this.$emit('update:leftDragItemIsDraged', val)
-    },
-    leftDragItemIsMoving(val) {
-      this.thisLeftDragItemIsMoving = val;
-    },
-    thisLeftDragItemIsMoving(val){
-      this.$emit('update:leftDragItemIsMoving', val)
-    }
+  watch: {
   },
   mounted() {
-    // this._cloneLeftItemText = this.cloneLeftItemText
-    // console.log(this.thisCloneLeftItemText)
-    // console.log(this.value)
   }
 }
 </script>

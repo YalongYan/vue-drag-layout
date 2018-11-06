@@ -18,11 +18,15 @@ const actions = {
   // }
   // item = {index:1, position: 1} position 1 是上 2 是下
   updateLayoutContentItem({ commit }, item) {
-    var layoutContentItemLength = state.layoutContentItem.length - 1
-    if (item.index > layoutContentItemLength) {
-      item.index = layoutContentItemLength
+    console.log(item)
+    console.log('- - - - - - -- - - - - - -')
+    if (item) {
+      var layoutContentItemLength = state.layoutContentItem.length - 1
+      if (item.index > layoutContentItemLength) {
+        item.index = layoutContentItemLength
+      }
+      commit(LAYOUT_CONTENT_ITEM, item);
     }
-    commit(LAYOUT_CONTENT_ITEM, item);
   },
   changeLayoutContentItem({ commit }) {
     commit(CHANGE_LAYOUT_CONTENT_ITEM);

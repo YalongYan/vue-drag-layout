@@ -15,8 +15,6 @@
         v-for="(item, index) in layoutItem"
         :item="item"
         v-model="cloneLeftItemText"
-        :leftDragItemIsDraged.sync = 'leftDragItemIsDraged'
-        :leftDragItemIsMoving.sync= 'leftDragItemIsMoving'
         :key="index"></li>
         <!-- <div class="cloneCtn"></div> -->
         <div style="clear:both"></div>
@@ -73,15 +71,15 @@ export default {
   },
   methods: {
     middleOnmouseEnter: function (event) {
-      if (this.leftDragItemIsDraged) {
-        this.leftDragItemIsMoving = true
-      }
+      // if (this.leftDragItemIsDraged) {
+      //   this.leftDragItemIsMoving = true
+      // }
     },
     middleOnmouseOut: function (event) {
-      if (this.leftDragItemIsDraged) {
-        this.leftDragItemIsMoving =false
-        this.emitUpdatePositionY(999)
-      }
+      // if (this.leftDragItemIsDraged) {
+      //   this.leftDragItemIsMoving =false
+      //   this.emitUpdatePositionY(999)
+      // }
     },
     dragCompentClick: function(index) {
       // console.log(index)
