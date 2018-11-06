@@ -83,6 +83,7 @@ export default {
      this.updateItemIsMoving(bool)
    },
    middleOnmouseEnter: function (event) {
+     console.log(this.vuexLeftDragItemIsMoving)
     // 中间的组件拖动进入
     if (this.vuexItemIsMoving) {
       var vuexPositionY = this.vuexPositionY
@@ -95,7 +96,7 @@ export default {
       }
       this.emitLayoutContentItem(item)
       this.emitUpdatePositionY(this.index)
-    } else if (this.vuexLeftDragItemIsMoving) {
+    }else if (this.vuexLeftDragItemIsMoving) {
       // 左侧组件拖动进入
        if (this.vuexPositionY !== 999) {
         var vuexPositionY = this.vuexPositionY
@@ -106,8 +107,8 @@ export default {
         } else {
           item.position = 2
         }
-        console.log(item)
-        console.log('-----------------')
+        // console.log(item)
+        // console.log('-----------------')
         this.emitLayoutContentItem(item)
       } else {
         var middleHeaderHeight = 30

@@ -18,8 +18,8 @@ const actions = {
   // }
   // item = {index:1, position: 1} position 1 是上 2 是下
   updateLayoutContentItem({ commit }, item) {
-    console.log(item)
-    console.log('- - - - - - -- - - - - - -')
+    // console.log(item)
+    // console.log('- - - - - - -- - - - - - -')
     if (item) {
       var layoutContentItemLength = state.layoutContentItem.length - 1
       if (item.index > layoutContentItemLength) {
@@ -88,6 +88,7 @@ const mutations = {
     // state.itemIsMoving = bool
   },
   [UPDATE_LEFT_DRAG_ITEM_ISMOVING](bool) {
+    console.log(bool)
     state.leftDragItemIsMoving = bool
   }
 };

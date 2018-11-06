@@ -76,10 +76,7 @@ export default {
       // }
     },
     middleOnmouseOut: function (event) {
-      // if (this.leftDragItemIsDraged) {
-      //   this.leftDragItemIsMoving =false
-      //   this.emitUpdatePositionY(999)
-      // }
+      console.log('out')
     },
     dragCompentClick: function(index) {
       // console.log(index)

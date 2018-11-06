@@ -57,6 +57,7 @@ export default {
       var wh = window.innerHeight;
       this.ismoving = true
       this.emitUpdateLeftDragItemIsMoving(true)
+      console.log('vuexLeftDragItemIsMoving' + this.vuexLeftDragItemIsMoving)
       // start 这段代码用来复位用的
       var endx=event.clientX-sb_bkx;
       var endy=event.clientY-sb_bky;
@@ -114,12 +115,13 @@ export default {
         document.onmouseup=function (ev) {
           _this.isPointEventNone = false
           _this.ismoving = false
-          _this.emitUpdateLeftDragItemIsMoving(false)
-          _target.style.zIndex = '';
-          document.onmouseup=null;
-          cloneLeftCtnItem.style.display = 'none'
           // mouseup之后  positionY 恢复 999 状态
           _this.emitUpdatePositionY(999)
+          _this.emitUpdateLeftDragItemIsMoving(false)
+          _target.style.zIndex = '';
+          // console.log('up')
+          document.onmouseup=null;
+          cloneLeftCtnItem.style.display = 'none'
         }
     }
   },
