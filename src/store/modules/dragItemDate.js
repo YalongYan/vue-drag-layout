@@ -1,10 +1,3 @@
-// const LAYOUT_CONTENT_ITEM = 'LAYOUT_CONTENT_ITEM';
-// const UPDATE_POSITION_Y = 'UPDATE_POSITION_Y';
-// const UPDATE_ITEM_IS_MOVING = 'UPDATE_ITEM_IS_MOVING';
-// const CHANGE_LAYOUT_CONTENT_ITEM = 'CHANGE_LAYOUT_CONTENT_ITEM';
-// const UPDATE_LEFT_DRAG_ITEM_ISMOVING = 'UPDATE_LEFT_DRAG_ITEM_ISMOVING';
-// const UPDATE_CENTER_DRAGGING_ITEM_DATA = 'UPDATE_CENTER_DRAGGING_ITEM_DATA';
-// const UPDATE_LEFT_DRAGGING_ITEM_DATA = 'UPDATE_LEFT_DRAGGING_ITEM_DATA';
 const state = {
   layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
   positionY: 999,
@@ -15,9 +8,6 @@ const state = {
 };
 
 const actions = {
-  // setUserInfo({ commit }, userInfo) {
-  //   commit(types.SET_USER_INFO, userInfo);
-  // }
   // item = {index:1, position: 1} position 1 是上 2 是下
   updateLayoutContentItem({ commit }, item) {
     if (item) {
@@ -25,32 +15,32 @@ const actions = {
       if (item.index > layoutContentItemLength) {
         item.index = layoutContentItemLength
       }
-      commit(LAYOUT_CONTENT_ITEM, item);
+      commit('LAYOUT_CONTENT_ITEM', item);
     }
   },
   changeLayoutContentItem({ commit },newState) {
-    commit(CHANGE_LAYOUT_CONTENT_ITEM, newState);
+    commit('CHANGE_LAYOUT_CONTENT_ITEM', newState);
   },
   updatePositionY({ commit }, position) {
     var layoutContentItemLength = state.layoutContentItem.length - 1
     if (position > layoutContentItemLength) {
       position = layoutContentItemLength
     }
-    commit(UPDATE_POSITION_Y, position);
+    commit('UPDATE_POSITION_Y', position);
   },
   updateItemIsMoving({ commit }, bool) {
-    commit(UPDATE_ITEM_IS_MOVING, bool);
+    commit('UPDATE_ITEM_IS_MOVING', bool);
   },
   updateLeftDragItemIsMoving({commit}, bool) {
-    commit(UPDATE_LEFT_DRAG_ITEM_ISMOVING, bool);
+    commit('UPDATE_LEFT_DRAG_ITEM_ISMOVING', bool);
   },
   // 中间拖动的组件的数据
   updateCenterDraggingItemData({commit}, item) {
-    commit(UPDATE_CENTER_DRAGGING_ITEM_DATA, item);
+    commit('UPDATE_CENTER_DRAGGING_ITEM_DATA', item);
   },
   // 左边拖动的组件的数据
   updateLeftDraggingItemData({commit}, item) {
-    commit(UPDATE_LEFT_DRAGGING_ITEM_DATA, item);
+    commit('UPDATE_LEFT_DRAGGING_ITEM_DATA', item);
   }
 };
 
@@ -93,11 +83,30 @@ const mutations = {
     state.itemIsMoving = bool
   },
   ['CHANGE_LAYOUT_CONTENT_ITEM'](state,newState) {
-    state.layoutContentItem = [ {text: '1111', upActive: false, downActive: false},{text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '555555', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}]
+    console.log(state.centerDraggingItemData)
+    var data = state.layoutContentItem
+    for (let i = 0; i < data.length; i++) {
+      // console.log(data[i])
+      let upActive = data[i].upActive
+      let downActive = data[i].downActive
+      if (upActive) {
+      // bug 到这里了
+      }
+      if (downActive) {
+
+      }
+    }
+    // state.layoutContentItem = [ {text: '1111', upActive: false, downActive: false},{text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '555555', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}]
     // state.layoutContentItem = newState
   },
   ['UPDATE_LEFT_DRAG_ITEM_ISMOVING'](state, bool) {
     state.leftDragItemIsMoving = bool
+  },
+  ['UPDATE_CENTER_DRAGGING_ITEM_DATA'](state, item) {
+    state.centerDraggingItemData = item
+  },
+  ['UPDATE_LEFT_DRAGGING_ITEM_DATA'](state, item) {
+    state.leftDraggingItemData = item
   }
 };
 

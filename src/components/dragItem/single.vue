@@ -74,10 +74,10 @@ export default {
       // var item = {index: 1, position: 1}
       this.updateLayoutContentItem(item)
     },
-    emitChangeLayoutContentItem: function (newState) {
-      this.changeLayoutContentItem(newState)
-    },
-    ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving', 'changeLayoutContentItem', 'updateCenterDraggingItemData']),
+    // emitChangeLayoutContentItem: function (newState) {
+    //   this.changeLayoutContentItem(newState)
+    // },
+    ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving', 'changeLayoutContentItem', 'updateCenterDraggingItemData', 'updateCenterDraggingItemData']),
     // ...mapActions(['updateLayoutContentItem']),
 
    emitUpdatePositionY: function (index) {
@@ -171,6 +171,7 @@ export default {
         // var scrolltop=document.documentElement.scrol
         document.onmousemove=function (ev) {
           if (_this.ismoving) {
+            _this.emitUpdateCenterDraggingItemData(_this.item)
             var item = {index: _this.index, position: 1}
             site.isFixed =true
             site.showUp =true
@@ -232,7 +233,7 @@ export default {
           childeNode.style.zIndex=0
           childeNode.style.background=''
           _this.emitUpdatePositionY(999)
-          _this.emitChangeLayoutContentItem('aaaa')
+          // _this.emitChangeLayoutContentItem('aaaa')
         }
     },
     dragCompentClick: function() {
