@@ -137,13 +137,10 @@ export default {
           item.position = 2
         }
         this.emitLayoutContentItem(item)
-        // this.emitUpdatePositionY(this.index)
       }
     }
    },
    middleOnmouseLeave: function (event) {
-    // this.emitUpdatePositionY(999)
-    // console.log(11111)
    },
     mousedown: function (event, site) {
       var _this = this
@@ -179,9 +176,8 @@ export default {
           if (_this.ismoving) {
             _this.emitUpdateCenterDraggingItemData(_this.item)
             _this.emitUpdateInitPositionY(_this.index)
+            _this.emitUpdatePositionY(_this.index)
             var item = {index: _this.index, position: 1}
-            // site.isFixed =true
-            // site.showUp =true
             var event=ev||window.event;
             if (event.clientY < 0 || event.clientX < 0 || event.clientY > wh || event.clientX > ww) {
               return false;
@@ -199,7 +195,7 @@ export default {
             childeNode.style.background='white'
 
             var vuexPositionY = _this.vuexPositionY
-            // vuexPositionY 初始值 和mouseUp之后 都是 999
+            // vuexPositionY 初始值 和mouseUp之后 都是 999   999代表刚开始拖动
             if (vuexPositionY === 999) {
               var _index = _this.index
               var item = {index: _index, position: 1}
@@ -226,21 +222,24 @@ export default {
         }
         document.onmouseup=function (ev) {
           _this.ismoving =false
+          _this.emitUpdatePositionY(999)
+          // console.log(_this.vuexPositionY)
+          _this.changeLayoutContentItem()
+          _this.emitUpdateIsNeedUpdateDate(false)
           _this.emitUpdateItemIsMoving(false)
           document.onmouseup=null;
           _target.style.border=''
-         
+          
           // 置空后来加上去的样式
-          childeNode.style.left=''
-          childeNode.style.top='';
-          childeNode.style.width='';
-          childeNode.style.height='';
           childeNode.style.position=''
-          childeNode.style.zIndex=0
-          childeNode.style.background=''
-          _this.emitUpdatePositionY(999)
-          _this.changeLayoutContentItem()
-          _this.emitUpdateIsNeedUpdateDate(false)
+          // childeNode.style.left=''
+          // childeNode.style.top='';
+          // childeNode.style.width='';
+          // childeNode.style.height='';
+          // childeNode.style.position=''
+          // childeNode.style.zIndex=0
+          // childeNode.style.background=''
+         
         }
     },
     dragCompentClick: function() {

@@ -2,6 +2,7 @@ import { stat } from "fs";
 
 const state = {
   layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
+  // layoutContentItem: [{text: '1111', upActive: false, downActive: false}],
   initPositionY: 999, // 中部 开始拖动组件的 index
   positionY: 999, // 进入到哪个组件的 index
   itemIsMoving: false, // 中间布局的item 是否被拖动
@@ -26,10 +27,10 @@ const actions = {
     commit('CHANGE_LAYOUT_CONTENT_ITEM');
   },
   updatePositionY({ commit }, position) {
-    var layoutContentItemLength = state.layoutContentItem.length - 1
-    if (position > layoutContentItemLength) {
-      position = layoutContentItemLength
-    }
+    // var layoutContentItemLength = state.layoutContentItem.length - 1
+    // if (position > layoutContentItemLength) {
+    //   position = layoutContentItemLength
+    // }
     commit('UPDATE_POSITION_Y', position);
   },
   updateInitPositionY({ commit }, position) {
@@ -85,7 +86,8 @@ const mutations = {
       data[index].downActive = true
       data[index].upActive = false
     }
-    // console.log(data[index])
+    state.layoutContentItem = data
+    // console.log(data)
   },
   ['UPDATE_POSITION_Y'](state, position) {
     state.positionY = position
@@ -96,36 +98,50 @@ const mutations = {
   ['UPDATE_ITEM_IS_MOVING'](state, bool) {
     state.itemIsMoving = bool
   },
-  ['CHANGE_LAYOUT_CONTENT_ITEM'](state) { 
+  ['CHANGE_LAYOUT_CONTENT_ITEM'](state) {
+    // console.log(state.isNeedUpdateDate)
+    // console.log(state.initPositionY)
+    var isNeedUpdateDateIndex = ''
+    for (var i = 0; i < state.layoutContentItem.length; i++) {
+      if (state.layoutContentItem[i].upActive || state.layoutContentItem[i].downActive) {
+        isNeedUpdateDateIndex = i
+      }
+    }
+    // 这是拖动 临界的位置 在临界位置
+    if (isNeedUpdateDateIndex == state.initPositionY) {
+      state.isNeedUpdateDate = false
+    }
     if (state.isNeedUpdateDate) {
       var data1 = state.layoutContentItem
+      // console.log(data1)
       data1.splice(state.initPositionY, 1)
       state.layoutContentItem = data1
-      var data = state.layoutContentItem
-      for (let i = 0; i < data.length; i++) {
-        let upActive = data[i].upActive
-        let downActive = data[i].downActive
+      var data2 = state.layoutContentItem
+      // console.log(data2)
+      for (let i = 0; i < data2.length; i++) {
+        let upActive = data2[i].upActive
+        let downActive = data2[i].downActive
         if (upActive) {
           state.centerDraggingItemData.upActive = false
           state.centerDraggingItemData.downActive = false
-          data.splice(i, 0, state.centerDraggingItemData)
+          data2.splice(i, 0, state.centerDraggingItemData)
           break
         }
         if (downActive) {
           state.centerDraggingItemData.upActive = false
           state.centerDraggingItemData.downActive = false
-          data.splice(i + 1, 0, state.centerDraggingItemData)
+          data2.splice(i + 1, 0, state.centerDraggingItemData)
           break
         }
       }
-      state.layoutContentItem = data
+      state.layoutContentItem = data2
     }
-    var data = state.layoutContentItem
-    for (let i = 0; i < data.length; i ++) {
-        data[i].downActive = false
-        data[i].upActive = false
+    var data3 = state.layoutContentItem
+    for (let i = 0; i < data3.length; i ++) {
+        data3[i].downActive = false
+        data3[i].upActive = false
     }
-    state.layoutContentItem = data
+    state.layoutContentItem = data3
   },
   ['UPDATE_LEFT_DRAG_ITEM_ISMOVING'](state, bool) {
     state.leftDragItemIsMoving = bool
