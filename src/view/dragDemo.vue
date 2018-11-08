@@ -2,7 +2,7 @@
   <div id="container">
     <div class="leftCtn">
       <h3>表单布局</h3>
-      <!-- 这是要克隆的 -->
+      <!-- 这是要克隆的 s-->
       <!-- <div > -->
         <li class="mainCtn compents-li pointEventNone" id='cloneLeftCtnItem' style="display: none;position: fixed;z-index:99">
           <div>{{cloneLeftItemText}}</div>
