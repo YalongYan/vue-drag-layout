@@ -39,7 +39,13 @@ export default {
     emitUpdateLayoutContentItem: function (item) {
       this.updateLayoutContentItem(item)
     },
-    ...mapActions(['updateLeftDragItemIsMoving', 'updatePositionY', 'updateLayoutContentItem']),
+    emitUpdateIsNeedUpdateDate: function (bool) {
+      this.updateIsNeedUpdateDate(bool)
+    },
+    emitUpdateLeftDraggingItemData: function (data) {
+      this.updateLeftDraggingItemData(data)
+    },
+    ...mapActions(['updateLeftDragItemIsMoving', 'updatePositionY', 'updateLayoutContentItem', 'changeLayoutContentItem', 'updateIsNeedUpdateDate', 'updateLeftDraggingItemData']),
     /*
     ** 
     */
@@ -57,7 +63,7 @@ export default {
       var wh = window.innerHeight;
       this.ismoving = true
       this.emitUpdateLeftDragItemIsMoving(true)
-      console.log('vuexLeftDragItemIsMoving' + this.vuexLeftDragItemIsMoving)
+      // console.log('vuexLeftDragItemIsMoving' + this.vuexLeftDragItemIsMoving)
       // start 这段代码用来复位用的
       var endx=event.clientX-sb_bkx;
       var endy=event.clientY-sb_bky;
@@ -73,7 +79,8 @@ export default {
 
         document.onmousemove=function (ev) {
           if (_this.ismoving) {
-            // fatherNode.append(cloneLeftCtnItem)  
+            _this.emitUpdateIsNeedUpdateDate(true)  
+            _this.emitUpdateLeftDraggingItemData(_this.item)
             _this.isPointEventNone = true
             _target.style.zIndex = 99;
             var event=ev||window.event;
@@ -122,6 +129,9 @@ export default {
           // console.log('up')
           document.onmouseup=null;
           cloneLeftCtnItem.style.display = 'none'
+          _this.changeLayoutContentItem()
+          _this.emitUpdateIsNeedUpdateDate(false)
+          _this.emitUpdateLeftDraggingItemData('')
         }
     }
   },

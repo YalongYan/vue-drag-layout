@@ -227,6 +227,7 @@ export default {
           _this.changeLayoutContentItem()
           _this.emitUpdateIsNeedUpdateDate(false)
           _this.emitUpdateItemIsMoving(false)
+          _this.emitUpdateCenterDraggingItemData('')
           document.onmouseup=null;
           _target.style.border=''
           
