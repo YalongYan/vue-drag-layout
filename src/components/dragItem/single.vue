@@ -77,18 +77,23 @@ export default {
     // emitChangeLayoutContentItem: function (newState) {
     //   this.changeLayoutContentItem(newState)
     // },
-    ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving', 'changeLayoutContentItem', 'updateCenterDraggingItemData', 'updateCenterDraggingItemData']),
-    // ...mapActions(['updateLayoutContentItem']),
-
+    ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving', 'changeLayoutContentItem', 'updateCenterDraggingItemData', 'updateCenterDraggingItemData', 'updateInitPositionY', 'updateIsNeedUpdateDate']),
    emitUpdatePositionY: function (index) {
      this.updatePositionY(index)
    },
    emitUpdateItemIsMoving: function (bool) {
      this.updateItemIsMoving(bool)
    },
+   emitUpdateInitPositionY: function (position) {
+     this.updateInitPositionY(position)
+   },
    // 保存中间正在拖动的组件数据
    emitUpdateCenterDraggingItemData: function (item) {
      this.updateCenterDraggingItemData(item)
+   },
+   // 是否需要触发更新数据
+   emitUpdateIsNeedUpdateDate: function (bool) {
+     this.updateIsNeedUpdateDate(bool)
    },
    middleOnmouseEnter: function (event) {
     //  console.log(this.vuexLeftDragItemIsMoving)
@@ -104,6 +109,7 @@ export default {
       }
       this.emitLayoutContentItem(item)
       this.emitUpdatePositionY(this.index)
+      this.emitUpdateIsNeedUpdateDate(true)
     }else if (this.vuexLeftDragItemIsMoving) {
       // 左侧组件拖动进入
        if (this.vuexPositionY !== 999) {
@@ -172,9 +178,10 @@ export default {
         document.onmousemove=function (ev) {
           if (_this.ismoving) {
             _this.emitUpdateCenterDraggingItemData(_this.item)
+            _this.emitUpdateInitPositionY(_this.index)
             var item = {index: _this.index, position: 1}
-            site.isFixed =true
-            site.showUp =true
+            // site.isFixed =true
+            // site.showUp =true
             var event=ev||window.event;
             if (event.clientY < 0 || event.clientX < 0 || event.clientY > wh || event.clientX > ww) {
               return false;
@@ -222,7 +229,6 @@ export default {
           _this.emitUpdateItemIsMoving(false)
           document.onmouseup=null;
           _target.style.border=''
-          _this.changeLayoutContentItem()
          
           // 置空后来加上去的样式
           childeNode.style.left=''
@@ -233,7 +239,8 @@ export default {
           childeNode.style.zIndex=0
           childeNode.style.background=''
           _this.emitUpdatePositionY(999)
-          // _this.emitChangeLayoutContentItem('aaaa')
+          _this.changeLayoutContentItem()
+          _this.emitUpdateIsNeedUpdateDate(false)
         }
     },
     dragCompentClick: function() {

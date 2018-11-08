@@ -1,10 +1,14 @@
+import { stat } from "fs";
+
 const state = {
   layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
-  positionY: 999,
+  initPositionY: 999, // 中部 开始拖动组件的 index
+  positionY: 999, // 进入到哪个组件的 index
   itemIsMoving: false, // 中间布局的item 是否被拖动
   leftDragItemIsMoving: false, // 左侧的item是否被拖动
   centerDraggingItemData: {}, // 保存中间拖动的组件的数据
-  leftDraggingItemData: {} // 保存左侧拖动的组件的数据 
+  leftDraggingItemData: {}, // 保存左侧拖动的组件的数据 
+  isNeedUpdateDate: false // 是否需要更新数据
 };
 
 const actions = {
@@ -18,8 +22,8 @@ const actions = {
       commit('LAYOUT_CONTENT_ITEM', item);
     }
   },
-  changeLayoutContentItem({ commit },newState) {
-    commit('CHANGE_LAYOUT_CONTENT_ITEM', newState);
+  changeLayoutContentItem({ commit }) {
+    commit('CHANGE_LAYOUT_CONTENT_ITEM');
   },
   updatePositionY({ commit }, position) {
     var layoutContentItemLength = state.layoutContentItem.length - 1
@@ -27,6 +31,9 @@ const actions = {
       position = layoutContentItemLength
     }
     commit('UPDATE_POSITION_Y', position);
+  },
+  updateInitPositionY({ commit }, position) {
+    commit('UPDATE_INIT_POSITION_Y', position);
   },
   updateItemIsMoving({ commit }, bool) {
     commit('UPDATE_ITEM_IS_MOVING', bool);
@@ -41,6 +48,10 @@ const actions = {
   // 左边拖动的组件的数据
   updateLeftDraggingItemData({commit}, item) {
     commit('UPDATE_LEFT_DRAGGING_ITEM_DATA', item);
+  },
+  // 是否需要触发更新数据
+  updateIsNeedUpdateDate({commit}, bool) {
+    commit('UPDATE_IS_NEED_UPDATE_DATA', bool);
   }
 };
 
@@ -79,25 +90,42 @@ const mutations = {
   ['UPDATE_POSITION_Y'](state, position) {
     state.positionY = position
   },
+  ['UPDATE_INIT_POSITION_Y'](state, position) {
+    state.initPositionY = position
+  },
   ['UPDATE_ITEM_IS_MOVING'](state, bool) {
     state.itemIsMoving = bool
   },
-  ['CHANGE_LAYOUT_CONTENT_ITEM'](state,newState) {
-    console.log(state.centerDraggingItemData)
-    var data = state.layoutContentItem
-    for (let i = 0; i < data.length; i++) {
-      // console.log(data[i])
-      let upActive = data[i].upActive
-      let downActive = data[i].downActive
-      if (upActive) {
-      // bug 到这里了
+  ['CHANGE_LAYOUT_CONTENT_ITEM'](state) { 
+    if (state.isNeedUpdateDate) {
+      var data1 = state.layoutContentItem
+      data1.splice(state.initPositionY, 1)
+      state.layoutContentItem = data1
+      var data = state.layoutContentItem
+      for (let i = 0; i < data.length; i++) {
+        let upActive = data[i].upActive
+        let downActive = data[i].downActive
+        if (upActive) {
+          state.centerDraggingItemData.upActive = false
+          state.centerDraggingItemData.downActive = false
+          data.splice(i, 0, state.centerDraggingItemData)
+          break
+        }
+        if (downActive) {
+          state.centerDraggingItemData.upActive = false
+          state.centerDraggingItemData.downActive = false
+          data.splice(i + 1, 0, state.centerDraggingItemData)
+          break
+        }
       }
-      if (downActive) {
-
-      }
+      state.layoutContentItem = data
     }
-    // state.layoutContentItem = [ {text: '1111', upActive: false, downActive: false},{text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '555555', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}]
-    // state.layoutContentItem = newState
+    var data = state.layoutContentItem
+    for (let i = 0; i < data.length; i ++) {
+        data[i].downActive = false
+        data[i].upActive = false
+    }
+    state.layoutContentItem = data
   },
   ['UPDATE_LEFT_DRAG_ITEM_ISMOVING'](state, bool) {
     state.leftDragItemIsMoving = bool
@@ -107,6 +135,9 @@ const mutations = {
   },
   ['UPDATE_LEFT_DRAGGING_ITEM_DATA'](state, item) {
     state.leftDraggingItemData = item
+  },
+  ['UPDATE_IS_NEED_UPDATE_DATA'](state, bool) {
+    state.isNeedUpdateDate = bool
   }
 };
 
