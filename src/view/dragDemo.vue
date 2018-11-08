@@ -1,5 +1,4 @@
 <template>
-<!-- 1-->
   <div id="container">
     <div class="leftCtn">
       <h3>表单布局</h3>
