@@ -56,30 +56,49 @@ export default {
     ...mapState({
       vuexPositionY: state => state.dragItemDate.positionY,
       vuexItemIsMoving: state => state.dragItemDate.itemIsMoving,
-      vuexLayoutContentItem: state => state.layoutContentItem
+      vuexLeftDragItemIsMoving: state => state.dragItemDate.leftDragItemIsMoving,
+      vuexLayoutContentItem: state => state.dragItemDate.layoutContentItem
+      // vuexCenterDraggingItemData: state => state.dragItemDate.centerDraggingItemData
     }),
   },
   methods: {
     /*
-    ** 
+    ** 移动的思路是 ：
+       第一个移动的组件 触发emitLayoutContentItem index 是自身的index 出现红框 
+       移入其他single组件的时候 比较 positionY 跟index 可以判断是从上 还是从下面移动过来的 显示上面或者下面的红框 
+       positionY初始  mouseup 都是 999 
+       移动的最高 最低 位置边界 在single.vue dragConmpent.vue 每个组件的 move 里面
     */
-  //  ...mapActions(['updatePositionY']),
+  //   ...mapActions(['updatePositionY']),
     emitLayoutContentItem: function (item) {
       // var item = {index: 1, position: 1}
       this.updateLayoutContentItem(item)
     },
-    ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving', 'changeLayoutContentItem']),
-    // ...mapActions(['updateLayoutContentItem']),
-
+    // emitChangeLayoutContentItem: function (newState) {
+    //   this.changeLayoutContentItem(newState)
+    // },
+    ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving', 'changeLayoutContentItem', 'updateCenterDraggingItemData', 'updateCenterDraggingItemData', 'updateInitPositionY', 'updateIsNeedUpdateDate']),
    emitUpdatePositionY: function (index) {
      this.updatePositionY(index)
    },
    emitUpdateItemIsMoving: function (bool) {
      this.updateItemIsMoving(bool)
    },
+   emitUpdateInitPositionY: function (position) {
+     this.updateInitPositionY(position)
+   },
+   // 保存中间正在拖动的组件数据
+   emitUpdateCenterDraggingItemData: function (item) {
+     this.updateCenterDraggingItemData(item)
+   },
+   // 是否需要触发更新数据
+   emitUpdateIsNeedUpdateDate: function (bool) {
+     this.updateIsNeedUpdateDate(bool)
+   },
    middleOnmouseEnter: function (event) {
+    //  console.log(this.vuexLeftDragItemIsMoving)
+    // 中间的组件拖动进入
     if (this.vuexItemIsMoving) {
-      // console.log(this.index)
       var vuexPositionY = this.vuexPositionY
       var _index = this.index
       var item = {index: _index, position: ''}
@@ -89,13 +108,39 @@ export default {
         item.position = 2
       }
       this.emitLayoutContentItem(item)
-      // console.log('aaaa' + this.index)
       this.emitUpdatePositionY(this.index)
+      this.emitUpdateIsNeedUpdateDate(true)
+    }else if (this.vuexLeftDragItemIsMoving) {
+      // 左侧组件拖动进入
+       if (this.vuexPositionY !== 999) {
+        var vuexPositionY = this.vuexPositionY
+        var _index = this.index
+        var item = {index: _index, position: ''}
+        if (_index > vuexPositionY) {
+          item.position = 1
+        } else {
+          item.position = 2
+        }
+        // console.log(item)
+        // console.log('-----------------')
+        this.emitLayoutContentItem(item)
+      } else {
+        var middleHeaderHeight = 30
+        var middleItemHeight = 90
+        var middleVertalHeigth = this.index * middleItemHeight + middleHeaderHeight + middleItemHeight/2
+        // console.log(middleVertalHeigth)
+        var _index = this.index
+        var item = {index: _index, position: ''}
+        if (event.y < middleVertalHeigth) {
+          item.position = 1
+        } else {
+          item.position = 2
+        }
+        this.emitLayoutContentItem(item)
+      }
     }
    },
    middleOnmouseLeave: function (event) {
-    // this.emitUpdatePositionY(999)
-    // console.log(11111)
    },
     mousedown: function (event, site) {
       var _this = this
@@ -129,25 +174,14 @@ export default {
         // var scrolltop=document.documentElement.scrol
         document.onmousemove=function (ev) {
           if (_this.ismoving) {
-            // console.log(_this.index)
-            // _this.emitUpdatePositionY(_this.index)
-            console.log(_this.index)
+            _this.emitUpdateCenterDraggingItemData(_this.item)
+            _this.emitUpdateInitPositionY(_this.index)
+            _this.emitUpdatePositionY(_this.index)
             var item = {index: _this.index, position: 1}
-            // if (_index > vuexPositionY) {
-            //   item.position = 1
-            // } else {
-            //   item.position = 2
-            // }
-            // _this.emitLayoutContentItem(item)
-
-            // console.log(_this.vuexPositionY)
-            site.isFixed =true
-            site.showUp =true
             var event=ev||window.event;
             if (event.clientY < 0 || event.clientX < 0 || event.clientY > wh || event.clientX > ww) {
               return false;
             };
-            // console.log(_this.vuexPositionY)
             // 这是父节点
             var endx=event.clientX-sb_bkx;
             var endy=event.clientY-sb_bky;
@@ -159,54 +193,55 @@ export default {
             childeNode.style.position='fixed'
             childeNode.style.zIndex=2
             childeNode.style.background='white'
-            console.log('y' + ev.y + 'positionY' + _this.vuexPositionY)
+
+            var vuexPositionY = _this.vuexPositionY
+            // vuexPositionY 初始值 和mouseUp之后 都是 999   999代表刚开始拖动
+            if (vuexPositionY === 999) {
+              var _index = _this.index
+              var item = {index: _index, position: 1}
+              _this.emitLayoutContentItem(item)
+            }
+            // start中间组件拖动的上下边界判断
+            var middleHeaderHeight = 30
+            var middleItemHeight = 90
+            var layoutContentItemLength = _this.vuexLayoutContentItem.length
+            var maxHeight = layoutContentItemLength * middleItemHeight
+            var minHeigth = middleHeaderHeight
+            var itemStoreM = {index: '', position: ''}
+            if (ev.y > maxHeight) {
+              itemStoreM.index = layoutContentItemLength - 1
+              itemStoreM.position = 2
+              _this.emitLayoutContentItem(itemStoreM)
+            } else if (ev.y < minHeigth) {
+              itemStoreM.index = 0
+              itemStoreM.position = 1
+              _this.emitLayoutContentItem(itemStoreM)
+            }
+            // end中间组件拖动的上下边界判断
           }
         }
         document.onmouseup=function (ev) {
           _this.ismoving =false
+          _this.emitUpdatePositionY(999)
+          // console.log(_this.vuexPositionY)
+          _this.changeLayoutContentItem()
+          _this.emitUpdateIsNeedUpdateDate(false)
           _this.emitUpdateItemIsMoving(false)
+          _this.emitUpdateCenterDraggingItemData('')
           document.onmouseup=null;
           _target.style.border=''
-          _this.changeLayoutContentItem()
-         
-          childeNode.style.left=''
-          childeNode.style.top='';
-          childeNode.style.width='';
-          childeNode.style.height='';
+          
+          // 置空后来加上去的样式
           childeNode.style.position=''
-          childeNode.style.zIndex=0
-          childeNode.style.background=''
+          // childeNode.style.left=''
+          // childeNode.style.top='';
+          // childeNode.style.width='';
+          // childeNode.style.height='';
+          // childeNode.style.position=''
+          // childeNode.style.zIndex=0
+          // childeNode.style.background=''
+         
         }
-    },
-    mouseup: function (event, site) {
-      document.onmousemove=null;
-      site.isFixed = false;
-    },
-
-    mouseover: function (event, site) {
-      if (localStorage.ismoving == 1) {
-        // console.log( 'localStorage.initY' + localStorage.initY )
-        console.log( 'over')
-        // console.log( event)
-      }
-
-      // console.log('over')
-
-      // for(var i = 0; i < this.baseData1.length; i++){
-      //   this.baseData1[i].showUp = false
-      // }
-      // for(var j = 0; j< this.baseData2.length; j++){
-      //   this.baseData2[j].showUp = false
-      // }
-      // site.showUp = true
-    },
-    
-    mouseout: function (event, site) {
-      if (localStorage.ismoving == 1) {
-        console.log('out')
-        // console.log( event )
-        // localStorage.initY = event.y
-      }
     },
     dragCompentClick: function() {
       this.$emit('dragCompentClick')
