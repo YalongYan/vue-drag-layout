@@ -99,20 +99,20 @@ const mutations = {
     state.itemIsMoving = bool
   },
   ['CHANGE_LAYOUT_CONTENT_ITEM'](state) {
-    var isNeedUpdateDateIndex = ''
-    for (var i = 0; i < state.layoutContentItem.length; i++) {
-      if (state.layoutContentItem[i].upActive || state.layoutContentItem[i].downActive) {
-        isNeedUpdateDateIndex = i
+    // 拖动中间的组件
+    if (state.centerDraggingItemData) {
+      var isNeedUpdateDateIndex = ''
+      for (var i = 0; i < state.layoutContentItem.length; i++) {
+        if (state.layoutContentItem[i].upActive || state.layoutContentItem[i].downActive) {
+          isNeedUpdateDateIndex = i
+        }
       }
-    }
-    // 这是拖动 临界的位置 在临界位置
-    if (isNeedUpdateDateIndex == state.initPositionY) {
-      state.isNeedUpdateDate = false
-    }
-    // 可以触发更新
-    if (state.isNeedUpdateDate) {
-      // 拖动中间的组件
-      if (state.centerDraggingItemData) {
+      // 这是拖动 临界的位置 在临界位置
+      if (isNeedUpdateDateIndex == state.initPositionY) {
+        state.isNeedUpdateDate = false
+      }
+      // 可以触发更新
+      if (state.isNeedUpdateDate) {
         var data1 = state.layoutContentItem
         data1.splice(state.initPositionY, 1)
         state.layoutContentItem = data1
@@ -135,35 +135,39 @@ const mutations = {
         }
         state.layoutContentItem = data2
       }
-      // 拖动左侧的组件
-      if (state.leftDraggingItemData) {
-        var text = state.leftDraggingItemData.text
-        var obj = {}
-        obj['text'] = text
-        obj['upActive'] = false
-        obj['downActive'] = false
-        var data = state.layoutContentItem
-        for (let i = 0; i < data.length; i++) {
-          let upActive = data[i].upActive
-          let downActive = data[i].downActive
-          if (upActive) {
-            data.splice(i, 0, obj)
-            break
-          }
-          if (downActive) {
-            data.splice(i + 1, 0, obj)
-            break
-          }
-        }
-        state.layoutContentItem = data
+      var data3 = state.layoutContentItem
+      for (let i = 0; i < data3.length; i ++) {
+          data3[i].downActive = false
+          data3[i].upActive = false
       }
+      state.layoutContentItem = data3
     }
-    var data3 = state.layoutContentItem
-    for (let i = 0; i < data3.length; i ++) {
-        data3[i].downActive = false
-        data3[i].upActive = false
+    // 拖动左侧的组件
+    if (state.leftDraggingItemData) {
+      var text = state.leftDraggingItemData.text
+      var obj = {}
+      obj['text'] = text
+      obj['upActive'] = false
+      obj['downActive'] = false
+      var data = state.layoutContentItem
+      for (let i = 0; i < data.length; i++) {
+        let upActive = data[i].upActive
+        let downActive = data[i].downActive
+        if (upActive) {
+          data.splice(i, 0, obj)
+          break
+        }
+        if (downActive) {
+          data.splice(i + 1, 0, obj)
+          break
+        }
+      }
+      for (let i = 0; i < data.length; i ++) {
+        data[i].downActive = false
+        data[i].upActive = false
+      }
+      state.layoutContentItem = data
     }
-    state.layoutContentItem = data3
   },
   ['UPDATE_LEFT_DRAG_ITEM_ISMOVING'](state, bool) {
     state.leftDragItemIsMoving = bool
