@@ -1,7 +1,139 @@
 import { stat } from "fs";
 
 const state = {
-  layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
+  // 只用了原数据的数组  对象里增加了 'upActive': false 'downActive': false 是用来控制红色边框的出现
+  layoutContentItem: [
+      {
+      "componentKey": "Text",
+      "title": "文本000",
+      "fieldId": "20181108195717mCmp5TOBfA",
+      "inLeft": false,
+      "required": false,
+      "crux": false,
+      "isTextArea": false,
+      "size": "large",
+      "borderColor": "",
+      "bacColor": "",
+      "titleFontColor": "",
+      "titleFontSize": 13,
+      "titleBold": false,
+      "titleUnderline": false,
+      "bacImg": null,
+      "tips": "",
+      "hideTitle": false,
+      "uniqueCheck": false,
+      "visible": false,
+      "calculate": false,
+      "calType": "2",
+      "complexCal": "",
+      "complexTrueVal": "",
+      "numberFields": "",
+      "numberFieldArr": [],
+      "columncode": "wb_1541678285948866",
+      'upActive': false,
+      'downActive': false
+    }, 
+      {
+      "componentKey": "Text",
+      "title": "文本222",
+      "fieldId": "20181109101800TWTeNtI5xk",
+      "inLeft": false,
+      "required": false,
+      "crux": false,
+      "isTextArea": false,
+      "size": "large",
+      "borderColor": "",
+      "bacColor": "",
+      "titleFontColor": "",
+      "titleFontSize": 13,
+      "titleBold": false,
+      "titleUnderline": false,
+      "bacImg": null,
+      "tips": "",
+      "hideTitle": false,
+      "uniqueCheck": false,
+      "visible": false,
+      "calculate": false,
+      "calType": "2",
+      "complexCal": "",
+      "complexTrueVal": "",
+      "numberFields": "",
+      "numberFieldArr": [],
+      "columncode": "wb222_1541729905916187",
+      'upActive': false,
+      'downActive': false
+    }, 
+      {
+      "componentKey": "Hyperlink",
+      "title": "超链接",
+      "fieldId": "20181109150921ZQBpaNTjx8",
+      "inLeft": false,
+      "required": false,
+      "crux": false,
+      "useDefaultValue": false,
+      "size": "large",
+      "borderColor": "",
+      "bacColor": "",
+      "titleFontColor": "",
+      "titleFontSize": 13,
+      "titleBold": false,
+      "titleUnderline": false,
+      "bacImg": null,
+      "tips": "",
+      "hideTitle": false,
+      "linkParams": [{
+        "key": "",
+        "value": ""
+      }],
+      "linkUrl": "",
+      "linkName": "",
+      "columncode": "clj_1541747366525461",
+      'upActive': false,
+      'downActive': false
+    }, 
+      {
+      "componentKey": "Money",
+      "title": "金额",
+      "fieldId": "20181109150923dsTMxTX4Vg",
+      "inLeft": false,
+      "required": false,
+      "crux": false,
+      "size": "large",
+      "borderColor": "",
+      "bacColor": "",
+      "bacImg": null,
+      "titleFontColor": "",
+      "percent": false,
+      "decimalPlace": 2,
+      "calculate": false,
+      "calType": "1",
+      "complexCal": "",
+      "complexTrueVal": "",
+      "complexCalRelateField": [],
+      "editable": true,
+      "isOperationRule": false,
+      "isTotal": true,
+      "average": false,
+      "maxInGird": false,
+      "minInGird": false,
+      "showOperValueInGird": true,
+      "mainTableField": "",
+      "inDataTable": false,
+      "numberFields": "",
+      "numberFieldArr": [],
+      "formula": "",
+      "max": "",
+      "min": "",
+      "tips": "",
+      "hideTitle": false,
+      "thousandth": false,
+      "numberToChinese": false,
+      "moneyType": "人民币",
+      "columncode": "je_1541747366525179",
+      'upActive': false,
+      'downActive': false
+    }],
+  // layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
   // layoutContentItem: [{text: '1111', upActive: false, downActive: false}],
   initPositionY: 999, // 中部 开始拖动组件的 index
   positionY: 999, // 进入到哪个组件的 index
@@ -144,9 +276,9 @@ const mutations = {
     }
     // 拖动左侧的组件
     if (state.leftDraggingItemData) {
-      var text = state.leftDraggingItemData.text
+      var title = state.leftDraggingItemData.title
       var obj = {}
-      obj['text'] = text
+      obj['title'] = title
       obj['upActive'] = false
       obj['downActive'] = false
       var data = state.layoutContentItem
@@ -177,6 +309,7 @@ const mutations = {
   },
   ['UPDATE_LEFT_DRAGGING_ITEM_DATA'](state, item) {
     state.leftDraggingItemData = item
+    // console.log(state.leftDraggingItemData)
   },
   ['UPDATE_IS_NEED_UPDATE_DATA'](state, bool) {
     state.isNeedUpdateDate = bool

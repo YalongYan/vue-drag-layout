@@ -1,6 +1,6 @@
 <template>
   <li class="mainCtn compents-li" :class="{pointEventNone: isPointEventNone}" @mousedown="mousedown($event, item)">
-    <div> {{item.text}} </div>
+    <div> {{item.title}} </div>
   </li>
 </template>
 
@@ -11,7 +11,7 @@ export default {
   props: {
     item: {
       type: Object,
-      default: () => ({text: '', icon: ''})
+      default: () => ({title: '', icon: ''})
     },
     value: {
       type: String,
@@ -96,7 +96,7 @@ export default {
             cloneLeftCtnItem.style.left = endx+'px';
             cloneLeftCtnItem.style.top = endy+'px';
             fatherNode.append(cloneLeftCtnItem)  
-            _this.$emit("input",_this.item.text);
+            _this.$emit("input",_this.item.title);
             cloneLeftCtnItem.style.display = 'block'
 
             // start中间组件拖动的上下边界判断

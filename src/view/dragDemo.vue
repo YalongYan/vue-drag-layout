@@ -22,12 +22,13 @@
       <br/>
       <h3>常用控件 demo</h3>
       <ul class="components-ul">
-        <li
-        is="DragCompent"
-        v-for="(item, index) in layoutItem2"
-        :item="item"
-        v-model="cloneLeftItemText"
-        :key="index"></li>
+        <div v-for="(item, index) in layoutItem2" :key="index">
+          <li
+            is="DragCompent"
+            :item="item"
+            v-model="cloneLeftItemText"
+          ></li>
+        </div>
         <div style="clear:both"></div>
       </ul>
     </div>
@@ -59,14 +60,13 @@ export default {
     return {
       cloneLeftItemText: 'aa',
       dragCtnIndex: '999999',
-      layoutItem: [{text: '一行两列', icon: 1}, {text: '一行三列', icon: 2}, {text: '表格', icon: 3}, {text: '明细子表', icon: 4}, {text: '分割线', icon: 5}],
-      layoutItem2: [{text: '日期', icon: 1}, {text: '时间', icon: 2}, {text: '规则', icon: 3}],
+      layoutItem: [{title: '一行两列', icon: 1}, {title: '一行三列', icon: 2}, {title: '表格', icon: 3}, {title: '明细子表', icon: 4}, {title: '分割线', icon: 5}],
+      layoutItem2: [{title: '日期', icon: 1}, {title: '时间', icon: 2}, {title: '规则', icon: 3}],
       // layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
       // 右边的组件是否被拖动了
       leftDragItemIsDraged: false,
       // 右边的组件是否在容器内移动
       leftDragItemIsMoving: false,
-
     }
   },
   methods: {
@@ -92,6 +92,7 @@ export default {
     ...mapState({ 
       layoutContentItem: state => state.dragItemDate.layoutContentItem
     }),
+    
   },
   components: {
     Single,

@@ -16,7 +16,7 @@
           <i class="iconfont icon-cancel02 j_widgetDele">x</i>
         </span>
         <div class="widget-title">
-          <span class="widget-title_js" style="color:;font-size:13;">{{item.text}}</span>
+          <span class="widget-title_js" style="color:;font-size:13;">{{item.title}}</span>
           <i class="iconfont icon-pencil j_edit-title edit-title">B</i>
         </div>
         <div class="widget-content">  
