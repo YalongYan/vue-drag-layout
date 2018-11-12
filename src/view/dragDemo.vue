@@ -34,14 +34,28 @@
     </div>
     <div class="middleCtn">
       <div class="head-title">表单标题</div>
-      <div class="ctn" @mouseenter = "middleOnmouseEnter($event)" @mouseleave = "middleOnmouseOut($event)">
-        <Single :class="{'field-active': index == dragCtnIndex}"
+      <div class="ctn">
+        <div class=""
         v-for="(item, index) in layoutContentItem" 
-        @dragCompentClick='dragCompentClick(index)'
         :key="index"
-        :item='item'
-        :index='index'/>
+        @mouseenter = "middleOnmouseEnter($event)"
+        @mouseleave = "middleOnmouseOut($event)">
+          <div v-if="item.componentKey === 'ColumnPanel' && item.size === '2'">
+            <TwoColumns
+              :class="{'field-active': index == dragCtnIndex}"
+              @dragCompentClick='dragCompentClick(index)'
+              :item='item'
+              :index='index'/>
+          </div>
+          <div v-else>
+            <Single :class="{'field-active': index == dragCtnIndex}"
+              @dragCompentClick='dragCompentClick(index)'
+              :item='item'
+              :index='index'/>
+          </div>
+        </div>
       </div>
+
     </div>
     <div class="rigthCtn">
       sasaaaa
@@ -53,6 +67,7 @@
 import { mapState, mapActions } from 'vuex'
 import DragCompent from '@/components/dragList/dragCompent'
 import Single from '@/components/dragItem/single'
+import TwoColumns from '@/components/dragItem/TwoColumns'
 
 export default {
   name: 'App',
@@ -92,11 +107,12 @@ export default {
     ...mapState({ 
       layoutContentItem: state => state.dragItemDate.layoutContentItem
     }),
-    
+
   },
   components: {
     Single,
-    DragCompent
+    DragCompent,
+    TwoColumns
   },
   mounted() {
     // console.log(this.updateLayoutContentItem({index: 1, position: 1}))

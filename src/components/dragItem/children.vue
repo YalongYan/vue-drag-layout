@@ -1,15 +1,16 @@
 <template>
   <!-- pointEventNone 是为了去掉该组件本身的鼠标事件 -->
-<div class="form-view"
-  @click='dragCompentClick()'
-  @mousedown="mousedown($event, item)">
-    <!-- <div class="field field_js field-active"> -->  
-    <div class="prefabricatedCtn prefabricatedUp" v-if="item.upActive"></div>
-    <div class="innerCtn"
-      :class="{pointEventNone: ismoving}"
-      @mouseenter = "middleOnmouseEnter($event)"
-      @mouseleave = "middleOnmouseLeave($event)">
-      <!-- <div class="field field_js" :class="{'field-active': item.active}"> -->
+  <!-- 从父组件继承的subItem  是个数组 如果数组[0]  有数据（不是undefine） 就是有内容, 计算属性获取数组[0] 的对象 item  -->
+<div style="height: 100%" 
+  @mouseleave = "middleOnmouseLeave($event)">
+  <!-- 如果item有数据 就是有组件 -->
+  <div
+    class="form-view"
+    :class="{pointEventNone: ismoving}"
+    v-if="item"
+    @click='dragCompentClick()'
+    @mousedown="mousedown($event, item)">
+    <div class="innerCtn">
       <div class="field field_js">
         <span class="widgetDele-btn">
           <i class="iconfont icon-plus icon-copy-margin j_widgetCopy">+</i>
@@ -20,31 +21,66 @@
           <i class="iconfont icon-pencil j_edit-title edit-title">B</i>
         </div>
         <div class="widget-content">  
-          <input type="text" class="form-control large" readonly=""> (%)
+          <input type="text" class="form-control large" readonly="">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 这是空的 拖动的时候 鼠标移入就显示红色边框 移出就隐藏 -->
+  <div v-else
+    class="emptyCtn"
+    :class="{dragInterClass: isEnter}"
+    @mouseenter = "middleOnmouseEnter($event)"></div>
+  <div v-if="isEnter" class="dragInterClass"></div>  
+</div>
+<!-- <div class="form-view"
+  @click='dragCompentClick()'
+  @mousedown="mousedown($event, item)">
+    <div class="prefabricatedCtn prefabricatedUp" v-if="item.upActive"></div>
+    <div class="innerCtn"
+      :class="{pointEventNone: ismoving}"
+      @mouseenter = "middleOnmouseEnter($event)"
+      @mouseleave = "middleOnmouseLeave($event)">
+      <div class="field field_js">
+        <span class="widgetDele-btn">
+          <i class="iconfont icon-plus icon-copy-margin j_widgetCopy">+</i>
+          <i class="iconfont icon-cancel02 j_widgetDele">x</i>
+        </span>
+        <div class="widget-title">
+          <span class="widget-title_js" style="color:;font-size:13;">{{item.title}}</span>
+          <i class="iconfont icon-pencil j_edit-title edit-title">B</i>
+        </div>
+        <div class="widget-content">  
+          <input type="text" class="form-control large" readonly="">
         </div>
       </div>
     </div>
     <div class="prefabricatedCtn prefabricatedDown" v-if="item.downActive"></div>
-</div>
+</div> -->
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex'
 export default {
-  name: 'Single',
+  name: 'Children',
   // prop: ['item', 'index'],
   props: {
-   item: {
-      type: Object,
-      default: () => ({title: ''})
+    subItem: {
+      type: Array,
+      default: () => ([])
     },
-   index: {
+    indexX: {
+      type: Number,
+      default: 0
+    },
+    indexY: {
       type: Number,
       default: 0
     }
   },
   data () {
     return {
+      isEnter: false,
       ismoving: false, //是否在mousedown状态下移动
       isout: false,    //鼠标是否out
       isover: false,   //是否mouseover
@@ -58,15 +94,18 @@ export default {
       vuexItemIsMoving: state => state.dragItemDate.itemIsMoving,
       vuexLeftDragItemIsMoving: state => state.dragItemDate.leftDragItemIsMoving,
       vuexLayoutContentItem: state => state.dragItemDate.layoutContentItem
-      // vuexCenterDraggingItemData: state => state.dragItemDate.centerDraggingItemData
     }),
+    item: function () {
+      // 是undefine 也返回 上面会判断
+      return this.subItem[0]
+    }
   },
   methods: {
     /*
     ** 移动的思路是 ：
-       第一个移动的组件 触发emitLayoutContentItem index 是自身的index 出现红框 
+       第一个移动的组件 触发emitLayoutContentItem index 是自身的index 出现红框
        移入其他single组件的时候 比较 positionY 跟index 可以判断是从上 还是从下面移动过来的 显示上面或者下面的红框 
-       positionY初始  mouseup 都是 999 
+       positionY初始  mouseup 都是 999
        移动的最高 最低 位置边界 在single.vue dragConmpent.vue 每个组件的 move 里面
     */
   //   ...mapActions(['updatePositionY']),
@@ -96,6 +135,7 @@ export default {
      this.updateIsNeedUpdateDate(bool)
    },
    middleOnmouseEnter: function (event) {
+     console.log('enter')
     //  console.log(this.vuexLeftDragItemIsMoving)
     // 中间的组件拖动进入
     if (this.vuexItemIsMoving) {
@@ -141,20 +181,20 @@ export default {
     }
    },
    middleOnmouseLeave: function (event) {
+     console.log('leave')
+     this.isEnter = false
    },
     mousedown: function (event, site) {
       var _this = this
       var _site = site
       var event=event||window.event;
       var _target = event.currentTarget
-
-      var childeNode = this.$el.childNodes[2]
+      var childeNode = this.$el.childNodes[0]
 
       var startx=event.x;
       var starty=event.y;
       var _offsetLeft = childeNode.offsetLeft
       var _offsetTop = childeNode.offsetTop
-      // var starty=event.clientY;
       // sb_bkx sb_bky 是鼠标距离div边缘的距离
       var sb_bkx=startx-_offsetLeft;
       var sb_bky=starty-_offsetTop;
@@ -174,6 +214,7 @@ export default {
         // var scrolltop=document.documentElement.scrol
         document.onmousemove=function (ev) {
           if (_this.ismoving) {
+            _this.isEnter = true
             _this.emitUpdateCenterDraggingItemData(_this.item)
             _this.emitUpdateInitPositionY(_this.index)
             _this.emitUpdatePositionY(_this.index)
@@ -190,7 +231,7 @@ export default {
             childeNode.style.top=endy+'px';
             childeNode.style.width=targetWidth+'px';
             childeNode.style.height=targetHeight+'px';
-            childeNode.style.position='fixed'
+            childeNode.style.position='absolute'
             childeNode.style.zIndex=2
             childeNode.style.background='white'
 
@@ -247,6 +288,9 @@ export default {
       this.$emit('dragCompentClick')
     }
     
+  },
+  mounted (){
+    // console.log(this.item)
   }
   // watch:{
   //   leftDragItemIsMoving(val) {
@@ -261,68 +305,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss'>
-.form-view{
-  box-sizing: border-box;
-  .field_js{
-    border-bottom: 1px solid #ddd;
-    position: relative;
-    padding: 20px;
-    // background: white;
-    height: 49px;
-   
-    .widgetDele-btn{
-      font-size: 18px;
-      position: absolute;
-      right: 0;
-      top: -4px;
-      margin-top: -12px;
-      color: #d14836;
-      display: none;
-      cursor: pointer;
-      z-index: 2;
-      background-color: #F2F2F2;
-      border-radius: 5px 0 0;
-      width: 50px;
-      
-      .icon-copy-margin {
-        margin-right: 6px;
-        margin-left: 8px;
-        float: left;
-      }
-    }
-    .widget-title{
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1;
-      display: block;
-      cursor: default;
-      word-wrap: break-word;
-      word-break: break-all;
-      margin-bottom: 10px;
-      .widget-title_js{
-        color: rgba(51,51,51,1);
-      }
-      .edit-title{
-        display: none;
-      }
-      &:hover{
-        .edit-title{
-          display: inline-block;
-        }
-      }
-    }
-    .widget-content{
-      .large{
-        width: 95%;
-      }
-    }
-  }
-  .prefabricatedCtn{
-    width: 100%;
-    height: 90px;
-    border: 1px dashed red;
-    // display: none;
-  }
+.dragInterClass{
+  border: 1px dashed red;
+  height: 100%;
 }
 .field-active{
     // background: rgba(241,241,241,.8);
@@ -337,5 +322,8 @@ export default {
 }
 .pointEventNone{
   pointer-events: none;
+}
+.emptyCtn{
+  height: 100%;
 }
 </style>

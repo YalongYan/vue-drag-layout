@@ -1,32 +1,32 @@
 <template>
-  <!-- pointEventNone 是为了去掉该组件本身的鼠标事件 -->
-  <div class="form-view"
-  @click='dragCompentClick()'>
-    <!-- <div class="field field_js field-active"> -->  
-    <div class="prefabricatedCtn prefabricatedUp" v-if="item.upActive"></div>
-    <div class="innerCtn"
-      :class="{pointEventNone: ismoving}"
-      @mouseenter = "middleOnmouseEnter($event)">
-      <!-- <div class="field field_js" :class="{'field-active': item.active}"> -->
-      <div class="field field_js">
-        <span class="widgetDele-btn">
-          <i class="iconfont icon-plus icon-copy-margin j_widgetCopy">+</i>
-          <i class="iconfont icon-cancel02 j_widgetDele">x</i>
-        </span>
-        <div class="widget-title">
-          <span class="widget-title_js" style="color:;font-size:13;">{{item.text}}</span>
-          <i class="iconfont icon-pencil j_edit-title edit-title">B</i>
-        </div>
-        <div class="widget-content">
-          <input type="text" class="form-control large" readonly=""> (%)
-        </div>
-      </div>
+<div class="form-view">
+  <div class="form-layout">
+    <div class="twoColumns field field_js left">
+      <Children
+        :subItem = 'item.layoutDetail[0].layoutDetail'
+        :indexX = index
+        :indexY = '0'/>
     </div>
-    <div class="prefabricatedCtn prefabricatedDown" v-if="item.downActive"></div>
+    <div class="twoColumns field field_js right">
+      <Children
+        :subItem = 'item.layoutDetail[1].layoutDetail'
+        :indexX = index
+        :indexY = '0'/>
+    </div>
+    <div style="clear:both"></div>
+  </div>
+  <!-- toolbar -->
+  <div class="form-layout-toolbar" style="display:none">
+    <span class="edit-btn j_cancel-drag field_table_js"><i class="iconfont icon-pencil"></i>编辑</span>
+    <span class="j_layoutCopy layoutCopy-btn j_cancel-drag"><i class="iconfont icon-plus"></i>复制</span>
+    <span class="j_layoutDrag layoutDrag-btn"><i class="iconfont icon-tuozhuai"></i>拖动</span>
+    <span class="j_layoutDele layoutDele-btn j_cancel-drag"><i class="iconfont icon-delete"></i>删除</span>
+  </div>
 </div>
 </template>
 
 <script>
+import Children from '@/components/dragItem/children/'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'TwoColumns',
@@ -34,8 +34,9 @@ export default {
   props: {
    item: {
       type: Object,
-      default: () => ({text: ''})
+      default: () => ({title: ''})
     },
+   // indexX 
    index: {
       type: Number,
       default: 0
@@ -54,75 +55,38 @@ export default {
     ...mapState({
       vuexPositionY: state => state.dragItemDate.positionY
     }),
+    // turnItemToArr: function(){
+    //   var aa = this.item.layoutDetail[0]
+    //   console.log(aa)
+    //   return this.item
+    // }
   },
   methods: {
+  },
+  components: {
+    Children
+  },
+  mounted() {
+    // console.log(this.item)
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang='scss'>
+<style lang='scss' scoped>
 .form-view{
-  box-sizing: border-box;
-  .field_js{
-    border-bottom: 1px solid #ddd;
-    position: relative;
-    padding: 20px;
-    // background: white;
-    height: 49px;
-   
-    .widgetDele-btn{
-      font-size: 18px;
-      position: absolute;
-      right: 0;
-      top: -4px;
-      margin-top: -12px;
-      color: #d14836;
-      display: none;
-      cursor: pointer;
-      z-index: 2;
-      background-color: #F2F2F2;
-      border-radius: 5px 0 0;
-      width: 50px;
-      
-      .icon-copy-margin {
-        margin-right: 6px;
-        margin-left: 8px;
-        float: left;
-      }
-    }
-    .widget-title{
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1;
-      display: block;
-      cursor: default;
-      word-wrap: break-word;
-      word-break: break-all;
-      margin-bottom: 10px;
-      .widget-title_js{
-        color: rgba(51,51,51,1);
-      }
-      .edit-title{
-        display: none;
-      }
-      &:hover{
-        .edit-title{
-          display: inline-block;
-        }
-      }
-    }
-    .widget-content{
-      .large{
-        width: 95%;
-      }
-    }
-  }
-  .prefabricatedCtn{
-    width: 100%;
+  .twoColumns{
+    width: 50%;
+    float: left;
+    padding: 0;
     height: 90px;
-    border: 1px dashed red;
-    // display: none;
+    box-sizing: border-box;
+  }
+  .left{
+    border-right: 1px solid #ddd;
+  }
+  .right{
+
   }
 }
 .field-active{
