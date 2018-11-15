@@ -1,14 +1,14 @@
 <template>
   <!-- pointEventNone 是为了去掉该组件本身的鼠标事件 -->
-<div class="form-view"
+  <div class="form-view"
   @click='dragCompentClick()'
-  @mousedown="mousedown($event, item)">
+  @mousedown="mousedown($event, item)"
+  @mouseleave = "middleOnmouseLeave($event)">
     <!-- <div class="field field_js field-active"> -->  
     <div class="prefabricatedCtn prefabricatedUp" v-if="item.upActive"></div>
     <div class="innerCtn"
       :class="{pointEventNone: ismoving}"
-      @mouseenter = "middleOnmouseEnter($event)"
-      @mouseleave = "middleOnmouseLeave($event)">
+      @mouseenter = "middleOnmouseEnter($event)">
       <!-- <div class="field field_js" :class="{'field-active': item.active}"> -->
       <div class="field field_js">
         <span class="widgetDele-btn">
@@ -23,7 +23,7 @@
           <input type="text" class="form-control large" readonly=""> (%)
         </div>
       </div>
-    </div>
+    </div>  
     <div class="prefabricatedCtn prefabricatedDown" v-if="item.downActive"></div>
 </div>
 </template>
@@ -36,7 +36,7 @@ export default {
   props: {
    item: {
       type: Object,
-      default: () => ({title: ''})
+      default: () => ({text: ''})
     },
    index: {
       type: Number,
@@ -141,6 +141,12 @@ export default {
     }
    },
    middleOnmouseLeave: function (event) {
+    var _target = event.currentTarget
+    // 加上这个的原因是 dom操作比vuexd的数据变化快 不加这个 这段代码就比vuex的数据变化先执行 出现闪屏现象
+    setTimeout(function () {
+      _target.style.height = ''
+      _target.style.border = ''
+    }, 0)
    },
     mousedown: function (event, site) {
       var _this = this
@@ -150,8 +156,11 @@ export default {
 
       var childeNode = this.$el.childNodes[2]
 
+      _target.style.height = '90px'
+      _target.style.border = '1px dashed red'
       var startx=event.x;
       var starty=event.y;
+      // console.log(this)
       var _offsetLeft = childeNode.offsetLeft
       var _offsetTop = childeNode.offsetTop
       // var starty=event.clientY;
@@ -230,7 +239,7 @@ export default {
           _this.emitUpdateCenterDraggingItemData('')
           document.onmouseup=null;
           _target.style.border=''
-          
+          _target.style.height = ''
           // 置空后来加上去的样式
           childeNode.style.position=''
           // childeNode.style.left=''
