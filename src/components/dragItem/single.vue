@@ -7,7 +7,7 @@
     <!-- <div class="field field_js field-active"> -->  
     <div class="prefabricatedCtn prefabricatedUp" v-if="item.upActive"></div>
     <div class="innerCtn"
-      :class="{pointEventNone: ismoving}"
+      :class="{pointEventNone: isShowPointEventNone}"
       @mouseenter = "middleOnmouseEnter($event)">
       <!-- <div class="field field_js" :class="{'field-active': item.active}"> -->
       <div class="field field_js">
@@ -45,6 +45,7 @@ export default {
   },
   data () {
     return {
+      isShowPointEventNone: false, // 是否添加PointEventNone 这个Calss
       ismoving: false, //是否在mousedown状态下移动
       isout: false,    //鼠标是否out
       isover: false,   //是否mouseover
@@ -71,12 +72,8 @@ export default {
     */
   //   ...mapActions(['updatePositionY']),
     emitLayoutContentItem: function (item) {
-      // var item = {index: 1, position: 1}
       this.updateLayoutContentItem(item)
     },
-    // emitChangeLayoutContentItem: function (newState) {
-    //   this.changeLayoutContentItem(newState)
-    // },
     ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving', 'changeLayoutContentItem', 'updateCenterDraggingItemData', 'updateCenterDraggingItemData', 'updateInitPositionY', 'updateIsNeedUpdateDate']),
    emitUpdatePositionY: function (index) {
      this.updatePositionY(index)
@@ -121,14 +118,11 @@ export default {
         } else {
           item.position = 2
         }
-        // console.log(item)
-        // console.log('-----------------')
         this.emitLayoutContentItem(item)
       } else {
         var middleHeaderHeight = 30
         var middleItemHeight = 90
         var middleVertalHeigth = this.index * middleItemHeight + middleHeaderHeight + middleItemHeight/2
-        // console.log(middleVertalHeigth)
         var _index = this.index
         var item = {index: _index, position: ''}
         if (event.y < middleVertalHeigth) {
@@ -142,6 +136,8 @@ export default {
    },
    middleOnmouseLeave: function (event) {
     var _target = event.currentTarget
+    this.ismoving = false
+    // this.isShowPointEventNone = false
     // 加上这个的原因是 dom操作比vuexd的数据变化快 不加这个 这段代码就比vuex的数据变化先执行 出现闪屏现象
     setTimeout(function () {
       _target.style.height = ''
@@ -157,7 +153,7 @@ export default {
       var childeNode = this.$el.childNodes[2]
 
       _target.style.height = '90px'
-      _target.style.border = '1px dashed red'
+      
       var startx=event.x;
       var starty=event.y;
       // console.log(this)
@@ -172,6 +168,7 @@ export default {
       var targetWidth = this.$el.clientWidth
       var targetHeight = this.$el.clientHeight
       this.ismoving = true
+      this.isShowPointEventNone = true
       this.emitUpdateItemIsMoving(true)
 
       if (event.preventDefault) {
@@ -183,6 +180,11 @@ export default {
         // var scrolltop=document.documentElement.scrol
         document.onmousemove=function (ev) {
           if (_this.ismoving) {
+            _target.style.border = '1px dashed red'
+          } else {
+            _target.style.border = ''
+          }
+          if (_this.vuexItemIsMoving) {
             _this.emitUpdateCenterDraggingItemData(_this.item)
             _this.emitUpdateInitPositionY(_this.index)
             _this.emitUpdatePositionY(_this.index)
@@ -231,6 +233,7 @@ export default {
         }
         document.onmouseup=function (ev) {
           _this.ismoving =false
+          _this.isShowPointEventNone =false
           _this.emitUpdatePositionY(999)
           // console.log(_this.vuexPositionY)
           _this.changeLayoutContentItem()
@@ -242,13 +245,6 @@ export default {
           _target.style.height = ''
           // 置空后来加上去的样式
           childeNode.style.position=''
-          // childeNode.style.left=''
-          // childeNode.style.top='';
-          // childeNode.style.width='';
-          // childeNode.style.height='';
-          // childeNode.style.position=''
-          // childeNode.style.zIndex=0
-          // childeNode.style.background=''
          
         }
     },
