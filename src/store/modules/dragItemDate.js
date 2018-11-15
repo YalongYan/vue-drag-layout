@@ -1,7 +1,215 @@
 import { stat } from "fs";
 
 const state = {
-  layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
+  // 只用了原数据的数组  对象里增加了 'upActive': false 'downActive': false 是用来控制红色边框的出现
+  layoutContentItem: [{
+		"componentKey": "Text",
+		"title": "文本000",
+		"fieldId": "20181108195717mCmp5TOBfA",
+		"inLeft": false,
+		"required": false,
+		"crux": true,
+		"isTextArea": false,
+		"size": "large",
+		"borderColor": "",
+		"bacColor": "",
+		"titleFontColor": "",
+		"titleFontSize": 13,
+		"titleBold": false,
+		"titleUnderline": false,
+		"bacImg": null,
+		"tips": "",
+		"hideTitle": false,
+		"uniqueCheck": false,
+		"visible": false,
+		"calculate": false,
+		"calType": "2",
+		"complexCal": "",
+		"complexTrueVal": "",
+		"numberFields": "",
+		"numberFieldArr": [],
+    "columncode": "wb_1541678285948866",
+    'upActive': false,
+    'downActive': false
+  },
+  {
+		"componentKey": "Text",
+		"title": "文本222",
+		"fieldId": "20181109101800TWTeNtI5xk",
+		"inLeft": true,
+		"required": true,
+		"crux": false,
+		"isTextArea": false,
+		"size": "large",
+		"borderColor": "",
+		"bacColor": "",
+		"titleFontColor": "",
+		"titleFontSize": 13,
+		"titleBold": false,
+		"titleUnderline": false,
+		"bacImg": null,
+		"tips": "",
+		"hideTitle": true,
+		"uniqueCheck": false,
+		"visible": false,
+		"calculate": false,
+		"calType": "2",
+		"complexCal": "",
+		"complexTrueVal": "",
+		"numberFields": "",
+		"numberFieldArr": [],
+    "columncode": "wb222_1541729905916187",
+    'upActive': false,
+    'downActive': false
+	},
+  {
+		"componentKey": "Text",
+		"title": "文本3333",
+		"fieldId": "20181109101800TWTeNtI5xk",
+		"inLeft": false,
+		"required": false,
+		"crux": false,
+		"isTextArea": false,
+		"size": "large",
+		"borderColor": "",
+		"bacColor": "",
+		"titleFontColor": "",
+		"titleFontSize": 13,
+		"titleBold": false,
+		"titleUnderline": false,
+		"bacImg": null,
+		"tips": "",
+		"hideTitle": false,
+		"uniqueCheck": false,
+		"visible": false,
+		"calculate": false,
+		"calType": "2",
+		"complexCal": "",
+		"complexTrueVal": "",
+		"numberFields": "",
+		"numberFieldArr": [],
+    "columncode": "wb222_1541729905916187",
+    'upActive': false,
+    'downActive': false
+	},
+	 {
+		"fieldId": "20181108201139GBJRyIJAt2",
+		"componentKey": "ColumnPanel",
+		"title": "一行两列",
+		"size": "2",
+		"available": true,
+		"bacColor": "",
+		"borderWidth": 1,
+		"layoutDetail": [{
+			"componentKey": "ColumnPanel",
+			"layoutDetail": [],
+			"size": "1"
+		}, {
+			"componentKey": "ColumnPanel",
+			"layoutDetail": [{
+				"componentKey": "Text",
+				"title": "文本111",
+				"fieldId": "20181108201815UbNRaXUIfB",
+				"inLeft": false,
+				"required": false,
+				"crux": false,
+				"isTextArea": false,
+				"size": "large",
+				"borderColor": "",
+				"bacColor": "",
+				"titleFontColor": "",
+				"titleFontSize": 13,
+				"titleBold": false,
+				"titleUnderline": false,
+				"bacImg": null,
+				"tips": "",
+				"hideTitle": false,
+				"uniqueCheck": false,
+				"visible": false,
+				"calculate": false,
+				"calType": "2",
+				"complexCal": "",
+				"complexTrueVal": "",
+				"numberFields": "",
+				"numberFieldArr": [],
+				"columncode": "wb_1541679666395165"
+			}],
+			"size": "1"
+		}]
+	}, 
+	 {
+		"fieldId": "20181109101802zMgVW3gcEU",
+		"componentKey": "ColumnPanel",
+		"title": "一行两列",
+		"size": "2",
+		"available": true,
+		"bacColor": "",
+		"borderWidth": 1,
+		"layoutDetail": [{
+			"componentKey": "ColumnPanel",
+			"layoutDetail": [{
+				"componentKey": "Password",
+				"title": "密码",
+				"fieldId": "20181109101809alDirc1F1m",
+				"inLeft": false,
+				"required": false,
+				"crux": false,
+				"isTextArea": false,
+				"size": "large",
+				"borderColor": "",
+				"bacColor": "",
+				"titleFontColor": "",
+				"titleFontSize": 13,
+				"titleBold": false,
+				"titleUnderline": false,
+				"bacImg": null,
+				"tips": "",
+				"hideTitle": false,
+				"uniqueCheck": false,
+				"visible": false,
+				"calculate": false,
+				"calType": "2",
+				"complexCal": "",
+				"complexTrueVal": "",
+				"numberFields": "",
+				"numberFieldArr": [],
+				"columncode": "mm_1541729905915453"
+			}],
+			"size": "1"
+		}, {
+			"componentKey": "ColumnPanel",
+			"layoutDetail": [{
+				"componentKey": "Text",
+				"title": "2112",
+				"fieldId": "20181109101802omluIDs3TQ",
+				"inLeft": false,
+				"required": false,
+				"crux": false,
+				"isTextArea": false,
+				"size": "large",
+				"borderColor": "",
+				"bacColor": "",
+				"titleFontColor": "",
+				"titleFontSize": 13,
+				"titleBold": false,
+				"titleUnderline": false,
+				"bacImg": null,
+				"tips": "",
+				"hideTitle": false,
+				"uniqueCheck": false,
+				"visible": false,
+				"calculate": false,
+				"calType": "2",
+				"complexCal": "",
+				"complexTrueVal": "",
+				"numberFields": "",
+				"numberFieldArr": [],
+				"columncode": "n2112_1541729905915431"
+			}],
+			"size": "1"
+		}]
+	}],
+  // layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
   // layoutContentItem: [{text: '1111', upActive: false, downActive: false}],
   initPositionY: 999, // 中部 开始拖动组件的 index
   positionY: 999, // 进入到哪个组件的 index
@@ -75,8 +283,12 @@ const mutations = {
     var data = state.layoutContentItem
     // 清空初始化
     for (var i = 0; i < data.length; i++) {
-      data[i].downActive = false
-      data[i].upActive = false
+      if (data[i].downActive) {
+        data[i].downActive = false
+      }
+      if (data[i].upActive) {
+        data[i].upActive = false
+      }
     }
     // console.log(item.position)
     if (item.position === 1 ) {
@@ -124,12 +336,16 @@ const mutations = {
             state.centerDraggingItemData.upActive = false
             state.centerDraggingItemData.downActive = false
             data2.splice(i, 0, state.centerDraggingItemData)
+            // 更新 positionY
+            state.positionY = i
             break
           }
           if (downActive) {
             state.centerDraggingItemData.upActive = false
             state.centerDraggingItemData.downActive = false
             data2.splice(i + 1, 0, state.centerDraggingItemData)
+            // 更新 positionY
+            state.positionY = i + 1
             break
           }
         }
@@ -144,9 +360,9 @@ const mutations = {
     }
     // 拖动左侧的组件
     if (state.leftDraggingItemData) {
-      var text = state.leftDraggingItemData.text
+      var title = state.leftDraggingItemData.title
       var obj = {}
-      obj['text'] = text
+      obj['title'] = title
       obj['upActive'] = false
       obj['downActive'] = false
       var data = state.layoutContentItem
@@ -155,10 +371,13 @@ const mutations = {
         let downActive = data[i].downActive
         if (upActive) {
           data.splice(i, 0, obj)
+          // 更新 positionY
+          state.positionY = i
           break
         }
         if (downActive) {
           data.splice(i + 1, 0, obj)
+          state.positionY = i + 1
           break
         }
       }
@@ -177,6 +396,7 @@ const mutations = {
   },
   ['UPDATE_LEFT_DRAGGING_ITEM_DATA'](state, item) {
     state.leftDraggingItemData = item
+    // console.log(state.leftDraggingItemData)
   },
   ['UPDATE_IS_NEED_UPDATE_DATA'](state, bool) {
     state.isNeedUpdateDate = bool

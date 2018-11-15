@@ -22,28 +22,43 @@
       <br/>
       <h3>常用控件 demo</h3>
       <ul class="components-ul">
-        <li
-        is="DragCompent"
-        v-for="(item, index) in layoutItem2"
-        :item="item"
-        v-model="cloneLeftItemText"
-        :key="index"></li>
+        <div v-for="(item, index) in layoutItem2" :key="index">
+          <li
+            is="DragCompent"
+            :item="item"
+            v-model="cloneLeftItemText"
+          ></li>
+        </div>
         <div style="clear:both"></div>
       </ul>
     </div>
     <div class="middleCtn">
       <div class="head-title">表单标题</div>
-      <div class="ctn" @mouseenter = "middleOnmouseEnter($event)" @mouseleave = "middleOnmouseOut($event)">
-        <Single :class="{'field-active': index == dragCtnIndex}"
+      <div class="ctn">
+        <div class=""
         v-for="(item, index) in layoutContentItem" 
-        @dragCompentClick='dragCompentClick(index)'
         :key="index"
-        :item='item'
-        :index='index'/>
+        @mouseenter = "middleOnmouseEnter($event)"
+        @mouseleave = "middleOnmouseOut($event)">
+          <div v-if="item.componentKey === 'ColumnPanel' && item.size === '2'">
+            <TwoColumns
+              :class="{'field-active': index == vuexPositionY}"
+              @dragCompentClick='dragCompentClick(index)'
+              :item='item'
+              :index='index'/>
+          </div>
+          <div v-else>
+            <Single :class="{'field-active': index == vuexPositionY}"
+              @dragCompentClick='dragCompentClick(index)'
+              :item='item'
+              :index='index'/>
+          </div>
+        </div>
       </div>
+
     </div>
     <div class="rigthCtn">
-      sasaaaa
+      <ShowDetails/>
     </div>
   </div>
 </template>
@@ -52,6 +67,8 @@
 import { mapState, mapActions } from 'vuex'
 import DragCompent from '@/components/dragList/dragCompent'
 import Single from '@/components/dragItem/single'
+import TwoColumns from '@/components/dragItem/TwoColumns'
+import ShowDetails from '@/components/dragItem/showDetails'
 
 export default {
   name: 'App',
@@ -59,17 +76,17 @@ export default {
     return {
       cloneLeftItemText: 'aa',
       dragCtnIndex: '999999',
-      layoutItem: [{text: '一行两列', icon: 1}, {text: '一行三列', icon: 2}, {text: '表格', icon: 3}, {text: '明细子表', icon: 4}, {text: '分割线', icon: 5}],
-      layoutItem2: [{text: '日期', icon: 1}, {text: '时间', icon: 2}, {text: '规则', icon: 3}],
+      layoutItem: [{title: '一行两列', icon: 1}, {title: '一行三列', icon: 2}, {title: '表格', icon: 3}, {title: '明细子表', icon: 4}, {title: '分割线', icon: 5}],
+      layoutItem2: [{title: '日期', icon: 1}, {title: '时间', icon: 2}, {title: '规则', icon: 3}],
       // layoutContentItem: [{text: '1111', upActive: false, downActive: false}, {text: '2222', upActive: false, downActive: false}, {text: '3333', upActive: false, downActive: false}, {text: '44444', upActive: false, downActive: false}, {text: '55555', upActive: false, downActive: false}],
       // 右边的组件是否被拖动了
       leftDragItemIsDraged: false,
       // 右边的组件是否在容器内移动
       leftDragItemIsMoving: false,
-
     }
   },
   methods: {
+    ...mapActions(['updatePositionY']),
     middleOnmouseEnter: function (event) {
       // if (this.leftDragItemIsDraged) {
       //   this.leftDragItemIsMoving = true
@@ -78,9 +95,7 @@ export default {
     middleOnmouseOut: function (event) {
     },
     dragCompentClick: function(index) {
-      // console.log(index)
-      this.dragCtnIndex = index
-      // console.log(this.dragCtnIndex)
+      this.updatePositionY(index)
     },
     // ...mapActions(['updateLayoutContentItem'])
     ...mapActions(['updatePositionY']),
@@ -90,12 +105,16 @@ export default {
   },
   computed: {
     ...mapState({ 
-      layoutContentItem: state => state.dragItemDate.layoutContentItem
+      layoutContentItem: state => state.dragItemDate.layoutContentItem,
+      vuexPositionY: state => state.dragItemDate.positionY,
     }),
+
   },
   components: {
     Single,
-    DragCompent
+    DragCompent,
+    TwoColumns,
+    ShowDetails
   },
   mounted() {
     // console.log(this.updateLayoutContentItem({index: 1, position: 1}))
@@ -173,6 +192,7 @@ ul, li{
     }
   }
   .rigthCtn{
+    padding: 10px;
     width: 300px;
     border: 1px solid black;
   }
