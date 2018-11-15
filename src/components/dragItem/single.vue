@@ -244,6 +244,7 @@ export default {
           document.onmouseup=null;
           _target.style.border=''
           _target.style.height = ''
+          _target.style.background = ''
           // 置空后来加上去的样式
           childeNode.style.position=''
          
@@ -321,6 +322,9 @@ export default {
       .large{
         width: 95%;
       }
+      .form-control{
+        border: 1px solid rgba(224,224,224,1);
+      }
     }
   }
   .prefabricatedCtn{
@@ -338,7 +342,10 @@ export default {
       display: block!important;
     }
     .field_js{
-      background:white;
+      background:#F2F2F2;
+    }
+    .form-control{
+      background: #F2F2F2;
     }
 }
 .pointEventNone{

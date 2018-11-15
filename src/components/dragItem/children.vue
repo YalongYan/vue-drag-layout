@@ -317,7 +317,7 @@ export default {
       display: block!important;
     }
     .field_js{
-      background:white;
+      // background:white;
     }
 }
 .pointEventNone{

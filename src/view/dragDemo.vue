@@ -42,13 +42,13 @@
         @mouseleave = "middleOnmouseOut($event)">
           <div v-if="item.componentKey === 'ColumnPanel' && item.size === '2'">
             <TwoColumns
-              :class="{'field-active': index == dragCtnIndex}"
+              :class="{'field-active': index == vuexPositionY}"
               @dragCompentClick='dragCompentClick(index)'
               :item='item'
               :index='index'/>
           </div>
           <div v-else>
-            <Single :class="{'field-active': index == dragCtnIndex}"
+            <Single :class="{'field-active': index == vuexPositionY}"
               @dragCompentClick='dragCompentClick(index)'
               :item='item'
               :index='index'/>
@@ -85,6 +85,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['updatePositionY']),
     middleOnmouseEnter: function (event) {
       // if (this.leftDragItemIsDraged) {
       //   this.leftDragItemIsMoving = true
@@ -93,9 +94,7 @@ export default {
     middleOnmouseOut: function (event) {
     },
     dragCompentClick: function(index) {
-      // console.log(index)
-      this.dragCtnIndex = index
-      // console.log(this.dragCtnIndex)
+      this.updatePositionY(index)
     },
     // ...mapActions(['updateLayoutContentItem'])
     ...mapActions(['updatePositionY']),
@@ -105,7 +104,8 @@ export default {
   },
   computed: {
     ...mapState({ 
-      layoutContentItem: state => state.dragItemDate.layoutContentItem
+      layoutContentItem: state => state.dragItemDate.layoutContentItem,
+      vuexPositionY: state => state.dragItemDate.positionY,
     }),
 
   },
