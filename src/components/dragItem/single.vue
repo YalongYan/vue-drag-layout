@@ -168,7 +168,7 @@ export default {
       var targetWidth = this.$el.clientWidth
       var targetHeight = this.$el.clientHeight
       this.ismoving = true
-      this.isShowPointEventNone = true
+      // this.isShowPointEventNone = true
       this.emitUpdateItemIsMoving(true)
 
       if (event.preventDefault) {
@@ -181,6 +181,7 @@ export default {
         document.onmousemove=function (ev) {
           if (_this.ismoving) {
             _target.style.border = '1px dashed red'
+            _this.isShowPointEventNone = true
           } else {
             _target.style.border = ''
           }
