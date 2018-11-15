@@ -181,7 +181,7 @@ export default {
     }
    },
    middleOnmouseLeave: function (event) {
-     console.log('leave')
+    //  console.log('leave')
      this.isEnter = false
    },
     mousedown: function (event, site) {

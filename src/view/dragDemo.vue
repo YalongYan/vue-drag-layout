@@ -58,7 +58,7 @@
 
     </div>
     <div class="rigthCtn">
-      sasaaaa
+      <ShowDetails/>
     </div>
   </div>
 </template>
@@ -68,6 +68,7 @@ import { mapState, mapActions } from 'vuex'
 import DragCompent from '@/components/dragList/dragCompent'
 import Single from '@/components/dragItem/single'
 import TwoColumns from '@/components/dragItem/TwoColumns'
+import ShowDetails from '@/components/dragItem/showDetails'
 
 export default {
   name: 'App',
@@ -112,7 +113,8 @@ export default {
   components: {
     Single,
     DragCompent,
-    TwoColumns
+    TwoColumns,
+    ShowDetails
   },
   mounted() {
     // console.log(this.updateLayoutContentItem({index: 1, position: 1}))
@@ -190,6 +192,7 @@ ul, li{
     }
   }
   .rigthCtn{
+    padding: 10px;
     width: 300px;
     border: 1px solid black;
   }

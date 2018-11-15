@@ -8,7 +8,7 @@ const state = {
 		"fieldId": "20181108195717mCmp5TOBfA",
 		"inLeft": false,
 		"required": false,
-		"crux": false,
+		"crux": true,
 		"isTextArea": false,
 		"size": "large",
 		"borderColor": "",
@@ -36,8 +36,8 @@ const state = {
 		"componentKey": "Text",
 		"title": "文本222",
 		"fieldId": "20181109101800TWTeNtI5xk",
-		"inLeft": false,
-		"required": false,
+		"inLeft": true,
+		"required": true,
 		"crux": false,
 		"isTextArea": false,
 		"size": "large",
@@ -49,7 +49,7 @@ const state = {
 		"titleUnderline": false,
 		"bacImg": null,
 		"tips": "",
-		"hideTitle": false,
+		"hideTitle": true,
 		"uniqueCheck": false,
 		"visible": false,
 		"calculate": false,
@@ -336,12 +336,16 @@ const mutations = {
             state.centerDraggingItemData.upActive = false
             state.centerDraggingItemData.downActive = false
             data2.splice(i, 0, state.centerDraggingItemData)
+            // 更新 positionY
+            state.positionY = i
             break
           }
           if (downActive) {
             state.centerDraggingItemData.upActive = false
             state.centerDraggingItemData.downActive = false
             data2.splice(i + 1, 0, state.centerDraggingItemData)
+            // 更新 positionY
+            state.positionY = i + 1
             break
           }
         }
@@ -367,10 +371,13 @@ const mutations = {
         let downActive = data[i].downActive
         if (upActive) {
           data.splice(i, 0, obj)
+          // 更新 positionY
+          state.positionY = i
           break
         }
         if (downActive) {
           data.splice(i + 1, 0, obj)
+          state.positionY = i + 1
           break
         }
       }

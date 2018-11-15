@@ -235,8 +235,7 @@ export default {
         document.onmouseup=function (ev) {
           _this.ismoving =false
           _this.isShowPointEventNone =false
-          _this.emitUpdatePositionY(999)
-          // console.log(_this.vuexPositionY)
+          // _this.emitUpdatePositionY(999)
           _this.changeLayoutContentItem()
           _this.emitUpdateIsNeedUpdateDate(false)
           _this.emitUpdateItemIsMoving(false)
