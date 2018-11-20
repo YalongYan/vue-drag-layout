@@ -1,6 +1,6 @@
 # vue-slicksort-practice
 
-![](http://pic6.huitu.com/res/20130116/84481_20130116142820494200_1.jpg)
+![](https://img2018.cnblogs.com/blog/872412/201811/872412-20181120210622911-737195316.gif)
 
 > A Vue.js project
 
