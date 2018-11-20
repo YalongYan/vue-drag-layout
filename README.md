@@ -1,5 +1,7 @@
 # vue-slicksort-practice
 
+![](http://pic6.huitu.com/res/20130116/84481_20130116142820494200_1.jpg)
+
 > A Vue.js project
 
 ## Build Setup
