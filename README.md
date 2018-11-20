@@ -12,6 +12,7 @@ npm install
 
 # serve with hot reload at localhost:8080
 npm run dev
+访问网址： http://localhost:8080/#/dragDemo
 
 # build for production with minification
 npm run build
