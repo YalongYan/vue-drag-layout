@@ -73,6 +73,7 @@ export const ContainerMixin = {
       if (this.events.hasOwnProperty(key)) {
         events[key].forEach(eventName =>
           this.container.addEventListener(eventName, this.events[key], false)
+          // console.log(eventName + this.events[key])
         );
       }
     }
@@ -129,7 +130,7 @@ export const ContainerMixin = {
         if (e.target.tagName.toLowerCase() === 'a') {
           e.preventDefault();
         }
-
+        // console.log(distance)
         if (!distance) {
           if (this.$props.pressDelay === 0) {
             this.handlePress(e);
@@ -246,7 +247,7 @@ export const ContainerMixin = {
         });
 
         this.helper = this.document.body.appendChild(clonedNode);
-
+        // console.log(clonedNode)
         this.helper.style.position = 'fixed';
         this.helper.style.top = `${this.boundingClientRect.top - margin.top}px`;
         this.helper.style.left = `${this.boundingClientRect.left - margin.left}px`;
@@ -295,6 +296,7 @@ export const ContainerMixin = {
         }
 
         this.listenerNode = e.touches ? node : this._window;
+
         // console.log(events.move)
         // ["touchmove", "mousemove"]
         events.move.forEach(eventName =>
@@ -303,8 +305,10 @@ export const ContainerMixin = {
             this.handleSortMove,
             false
           ));
+        
         // console.log(events.end)
         // ["touchend", "touchcancel", "mouseup"]
+        
         events.end.forEach(eventName =>
           this.listenerNode.addEventListener(
             eventName,
