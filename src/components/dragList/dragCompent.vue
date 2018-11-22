@@ -6,6 +6,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import $ from 'jquery'
 export default {
   name: 'dragCompent',
   props: {
@@ -79,6 +80,7 @@ export default {
 
         document.onmousemove=function (ev) {
           if (_this.ismoving) {
+            // console.log(111)
             _this.emitUpdateIsNeedUpdateDate(true)  
             _this.emitUpdateLeftDraggingItemData(_this.item)
             _this.isPointEventNone = true
@@ -95,31 +97,83 @@ export default {
   
             cloneLeftCtnItem.style.left = endx+'px';
             cloneLeftCtnItem.style.top = endy+'px';
-            fatherNode.append(cloneLeftCtnItem)  
+            fatherNode.appendChild(cloneLeftCtnItem)  
             _this.$emit("input",_this.item.title);
             cloneLeftCtnItem.style.display = 'block'
+            // start 根据鼠标的位置 显示红边框
+            var clientX = event.clientX
+            var clientY = event.clientY
+            var formViewData = $(".form-view")
+            var formViewDataLength = formViewData.length
+            var itemStoreM = {index: '', position: ''}
+            // minHeightCtn 的高度会实时更新
+            var minHeightCtnHeight = parseInt($('#minHeightCtn')[0]['clientHeight'])
+            var minHeightCtnWidth = parseInt($('#minHeightCtn')[0]['clientWidth'])
+            var minHeightCtnTop = parseInt($('#minHeightCtn')[0]['offsetTop'])
+            var minHeightCtnLeft = parseInt($('#minHeightCtn')[0]['offsetLeft'])
+            // 在区域内移动
+            if ((clientX > minHeightCtnLeft && clientX < (minHeightCtnLeft + minHeightCtnWidth)) && (clientY >= minHeightCtnTop && clientY < (minHeightCtnTop + minHeightCtnHeight))) {
+              // 遍历组件 看鼠标在哪个组件内部 展示哪个红色的边框
+              // 这是判断移动到最下面
+              if ((clientY > (minHeightCtnTop + minHeightCtnHeight - 90)) && formViewDataLength > 0) {
+                itemStoreM.index = formViewDataLength - 1 
+                itemStoreM.position = 2
+                _this.emitUpdateLayoutContentItem(itemStoreM)
+                return false
+              }
+              for (let i = 0; i < formViewDataLength; i++) {
+                itemStoreM.index = i
+                var thisDom = formViewData[i]
+                var offsetLeft = parseInt(thisDom['offsetLeft'])
+                var offsetTop = parseInt(thisDom['offsetTop'])
+                var clientHeight = 90 // 固定是90px
+                var offsetWidth = parseInt(formViewData[i].clientWidth)
+                var boolWidth = clientX > offsetLeft && clientX < (offsetLeft + offsetWidth)
+                // 上半部分
+                var boolHeightTop = clientY > offsetTop && clientY < (offsetTop + clientHeight/2)
+                // 下半部分
+                var boolHeightBottom = clientY > (offsetTop + clientHeight/2) && clientY < (offsetTop + clientHeight)
+                if (boolWidth && boolHeightTop) {
+                  itemStoreM.position = 1
+                  _this.emitUpdateLayoutContentItem(itemStoreM)
+                }
+                if (boolWidth && boolHeightBottom) {
+                  itemStoreM.position = 2
+                  _this.emitUpdateLayoutContentItem(itemStoreM)
+                }
+                // }
+              }
+            }
+            //  else {
+              // 只要把position 设置成 '' 就是清楚红色hover 边框
+              // itemStoreM.position = ''
+              // _this.emitUpdateLayoutContentItem(itemStoreM)
+            // }
+            
+            // end 根据鼠标的位置 显示红边框
 
             // start中间组件拖动的上下边界判断
-            var middleHeaderHeight = 30
-            var middleItemHeight = 90
-            var layoutContentItemLength = _this.vuexLayoutContentItem.length
-            var maxHeight = layoutContentItemLength * middleItemHeight
-            var minHeigth = middleHeaderHeight
-            var itemStoreM = {index: '', position: ''}
-            // console.log(itemStoreM)
-            if (ev.y > maxHeight) {
-              itemStoreM.index = layoutContentItemLength - 1
-              itemStoreM.position = 2
-              _this.emitUpdateLayoutContentItem(itemStoreM)
-            } else if (ev.y < minHeigth) {
-              itemStoreM.index = 0
-              itemStoreM.position = 1
-              _this.emitUpdateLayoutContentItem(itemStoreM)
-            }
+            // var middleHeaderHeight = 30
+            // var middleItemHeight = 90
+            // var layoutContentItemLength = _this.vuexLayoutContentItem.length
+            // var maxHeight = layoutContentItemLength * middleItemHeight
+            // var minHeigth = middleHeaderHeight
+            // var itemStoreM = {index: '', position: ''}
+
+            // if (ev.y > maxHeight) {
+            //   itemStoreM.index = layoutContentItemLength - 1
+            //   itemStoreM.position = 2
+            //   _this.emitUpdateLayoutContentItem(itemStoreM)
+            // } else if (ev.y < minHeigth) {
+            //   itemStoreM.index = 0
+            //   itemStoreM.position = 1
+            //   _this.emitUpdateLayoutContentItem(itemStoreM)
+            // }
             // end中间组件拖动的上下边界判断
           }
         }
         document.onmouseup=function (ev) {
+          var event=ev||window.event;
           _this.isPointEventNone = false
           _this.ismoving = false
           // mouseup之后  positionY 恢复 999 状态
@@ -138,6 +192,15 @@ export default {
   watch: {
   },
   mounted() {
+    // var formViewData = $(".form-view")
+    // var formViewDataLength = formViewData.length
+    // for (let i = 0; i < formViewDataLength; i++) {
+    //   var thisDom = formViewData[i]
+    //   var offsetLeft = formViewData[i].offsetLeft
+    //   var offsetTop = formViewData[i].offsetTop
+    //   var offsetHeight = formViewData[i].offsetHeight
+    //   var offsetWidth = formViewData[i].offsetWidth
+    // }
   }
 }
 </script>

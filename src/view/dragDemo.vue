@@ -35,27 +35,26 @@
     <div class="middleCtn">
       <div class="head-title">表单标题</div>
       <div class="ctn">
-        <div class=""
-        v-for="(item, index) in layoutContentItem" 
-        :key="index"
-        @mouseenter = "middleOnmouseEnter($event)"
-        @mouseleave = "middleOnmouseOut($event)">
-          <div v-if="item.componentKey === 'ColumnPanel' && item.size === '2'">
-            <TwoColumns
-              :class="{'field-active': index == vuexPositionY}"
-              @dragCompentClick='dragCompentClick(index)'
-              :item='item'
-              :index='index'/>
+        <div id="minHeightCtn">
+          <div class=""
+          v-for="(item, index) in layoutContentItem" 
+          :key="index">
+            <div v-if="item.componentKey === 'ColumnPanel' && item.size === '2'">
+              <TwoColumns
+                :class="{'field-active': index == vuexPositionY}"
+                @dragCompentClick='dragCompentClick(index)'
+                :item='item'
+                :index='index'/>
+            </div>
+            <div v-else>
+              <Single :class="{'field-active': index == vuexPositionY}"
+                @dragCompentClick='dragCompentClick(index)'
+                :item='item'
+                :index='index'/>
+            </div>
           </div>
-          <div v-else>
-            <Single :class="{'field-active': index == vuexPositionY}"
-              @dragCompentClick='dragCompentClick(index)'
-              :item='item'
-              :index='index'/>
-          </div>
-        </div>
       </div>
-
+    </div>
     </div>
     <div class="rigthCtn">
       <ShowDetails/>
@@ -188,7 +187,12 @@ ul, li{
     }
     .ctn{
       border: 1px solid black;
-      height: 800px;
+      min-height: 800px;
+
+      #minHeightCtn{
+        padding-bottom: 90px;
+        // border-bottom: 1px solid black;
+      }
     }
   }
   .rigthCtn{
