@@ -53,6 +53,7 @@
                 :index='index'/>
             </div>
           </div>
+          <div id='emptyHoverCtn' v-if="vuexEmptyHoverCtn"></div>
       </div>
     </div>
     </div>
@@ -106,6 +107,7 @@ export default {
     ...mapState({ 
       layoutContentItem: state => state.dragItemDate.layoutContentItem,
       vuexPositionY: state => state.dragItemDate.positionY,
+      vuexEmptyHoverCtn: state => state.dragItemDate.emptyHoverCtn
     }),
 
   },
@@ -192,6 +194,12 @@ ul, li{
       #minHeightCtn{
         padding-bottom: 90px;
         // border-bottom: 1px solid black;
+        #emptyHoverCtn{
+          width: 100%;
+          height: 90px;
+          border: 1px dashed red;
+          display: none
+        }
       }
     }
   }

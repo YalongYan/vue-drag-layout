@@ -102,7 +102,8 @@ const state = {
   leftDragItemIsMoving: false, // 左侧的item是否被拖动
   centerDraggingItemData: '', // 保存中间拖动的组件的数据
   leftDraggingItemData: '', // 保存左侧拖动的组件的数据 
-  isNeedUpdateDate: false // 是否需要更新数据
+  isNeedUpdateDate: false, // 是否需要更新数据
+  emptyHoverCtn: false // 没有数据的时候 是否展示红色hover边框
 };
 
 const actions = {
@@ -116,8 +117,8 @@ const actions = {
       commit('LAYOUT_CONTENT_ITEM', item);
     }
   },
-  changeLayoutContentItem({ commit }) {
-    commit('CHANGE_LAYOUT_CONTENT_ITEM');
+  changeLayoutContentItem({ commit }, item) {
+    commit('CHANGE_LAYOUT_CONTENT_ITEM', item);
   },
   updatePositionY({ commit }, position) {
     // var layoutContentItemLength = state.layoutContentItem.length - 1
@@ -146,6 +147,9 @@ const actions = {
   // 是否需要触发更新数据
   updateIsNeedUpdateDate({commit}, bool) {
     commit('UPDATE_IS_NEED_UPDATE_DATA', bool);
+  },
+  updateEmptyHoverCtn({commit}, bool) {
+    commit('UPDATE_EMPTY_HOVER_CTN', bool);
   }
 };
 
@@ -156,7 +160,8 @@ const getters = {
   itemIsMoving: state => state.itemIsMoving,
   leftDragItemIsMoving: state => state.leftDragItemIsMoving,
   centerDraggingItemData: state => state.centerDraggingItemData,
-  leftDraggingItemData: state => state.leftDraggingItemData
+  leftDraggingItemData: state => state.leftDraggingItemData,
+  emptyHoverCtn: state => state.emptyHoverCtn
 };
 
 const mutations = {
@@ -206,7 +211,13 @@ const mutations = {
   ['UPDATE_ITEM_IS_MOVING'](state, bool) {
     state.itemIsMoving = bool
   },
-  ['CHANGE_LAYOUT_CONTENT_ITEM'](state) {
+  ['CHANGE_LAYOUT_CONTENT_ITEM'](state, item) {
+    if (item) {
+      var initData = []
+      initData.push(item)
+      state.layoutContentItem = initData
+      return false
+    }
     // 拖动中间的组件
     if (state.centerDraggingItemData) {
       var isNeedUpdateDateIndex = ''
@@ -296,6 +307,9 @@ const mutations = {
   },
   ['UPDATE_IS_NEED_UPDATE_DATA'](state, bool) {
     state.isNeedUpdateDate = bool
+  },
+  ['UPDATE_EMPTY_HOVER_CTN'](state, bool) {
+    state.emptyHoverCtn = bool
   }
 };
 

@@ -27,7 +27,8 @@ export default {
    computed: {
     ...mapState({
       vuexLeftDragItemIsMoving: state => state.dragItemDate.leftDragItemIsMoving,
-      vuexLayoutContentItem: state => state.dragItemDate.layoutContentItem
+      vuexLayoutContentItem: state => state.dragItemDate.layoutContentItem,
+      vuexEmptyHoverCtn: state => state.dragItemDate.emptyHoverCtn
     }),
   },
   methods: {
@@ -46,11 +47,25 @@ export default {
     emitUpdateLeftDraggingItemData: function (data) {
       this.updateLeftDraggingItemData(data)
     },
-    ...mapActions(['updateLeftDragItemIsMoving', 'updatePositionY', 'updateLayoutContentItem', 'changeLayoutContentItem', 'updateIsNeedUpdateDate', 'updateLeftDraggingItemData']),
+    emitChangeLayoutContentItem: function (data) {
+      this.changeLayoutContentItem(data)
+    },
+    emitUpdateEmptyHoverCtn: function (bool) {
+      this.updateEmptyHoverCtn(bool)
+    },
+    ...mapActions([
+      'updateLeftDragItemIsMoving',
+      'updatePositionY',
+      'updateLayoutContentItem',
+      'changeLayoutContentItem',
+      'updateIsNeedUpdateDate',
+      'updateLeftDraggingItemData',
+      'updateEmptyHoverCtn']),
     /*
     ** 
     */
     mousedown: function (event, site) {
+      // var isNeedAddNewData = false
       var _this = this
       var _site = site
       var event=event||window.event;
@@ -113,6 +128,16 @@ export default {
             var minHeightCtnLeft = parseInt($('#minHeightCtn')[0]['offsetLeft'])
             // 在区域内移动
             if ((clientX > minHeightCtnLeft && clientX < (minHeightCtnLeft + minHeightCtnWidth)) && (clientY >= minHeightCtnTop && clientY < (minHeightCtnTop + minHeightCtnHeight))) {
+              // 开始没数据 需要新增数据
+              if (formViewDataLength === 0) {
+                _this.emitUpdateEmptyHoverCtn(true)
+                $('#emptyHoverCtn').show()
+                // var newItem = {"componentKey": "Text", "title": "新增的的的", "fieldId": "20181108195717mCmp5TOBfA", "inLeft": false, "required": false, "crux": true, "isTextArea": false, "hideTitle": false, "visible": false, 'upActive': false,'downActive': false}
+                // _this.emitChangeLayoutContentItem(newItem)
+                return false
+              } else {
+                _this.emitUpdateEmptyHoverCtn(false)
+              }
               // 遍历组件 看鼠标在哪个组件内部 展示哪个红色的边框
               // 这是判断移动到最下面
               if ((clientY > (minHeightCtnTop + minHeightCtnHeight - 90)) && formViewDataLength > 0) {
@@ -141,38 +166,16 @@ export default {
                   itemStoreM.position = 2
                   _this.emitUpdateLayoutContentItem(itemStoreM)
                 }
-                // }
               }
             }
-            //  else {
-              // 只要把position 设置成 '' 就是清楚红色hover 边框
-              // itemStoreM.position = ''
-              // _this.emitUpdateLayoutContentItem(itemStoreM)
-            // }
-            
-            // end 根据鼠标的位置 显示红边框
-
-            // start中间组件拖动的上下边界判断
-            // var middleHeaderHeight = 30
-            // var middleItemHeight = 90
-            // var layoutContentItemLength = _this.vuexLayoutContentItem.length
-            // var maxHeight = layoutContentItemLength * middleItemHeight
-            // var minHeigth = middleHeaderHeight
-            // var itemStoreM = {index: '', position: ''}
-
-            // if (ev.y > maxHeight) {
-            //   itemStoreM.index = layoutContentItemLength - 1
-            //   itemStoreM.position = 2
-            //   _this.emitUpdateLayoutContentItem(itemStoreM)
-            // } else if (ev.y < minHeigth) {
-            //   itemStoreM.index = 0
-            //   itemStoreM.position = 1
-            //   _this.emitUpdateLayoutContentItem(itemStoreM)
-            // }
-            // end中间组件拖动的上下边界判断
           }
         }
         document.onmouseup=function (ev) {
+          if (_this.vuexEmptyHoverCtn) {
+            var newItem = {"componentKey": "Text", "title": "新增的的的", "fieldId": "20181108195717mCmp5TOBfA", "inLeft": false, "required": false, "crux": true, "isTextArea": false, "hideTitle": false, "visible": false, 'upActive': false,'downActive': false}
+            _this.emitChangeLayoutContentItem(newItem)
+            $('#emptyHoverCtn').hide()
+          }
           var event=ev||window.event;
           _this.isPointEventNone = false
           _this.ismoving = false
