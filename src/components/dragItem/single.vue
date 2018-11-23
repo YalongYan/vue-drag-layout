@@ -1,7 +1,6 @@
 <template>
   <!-- pointEventNone 是为了去掉该组件本身的鼠标事件 -->
   <div class="form-view"
-  @click='dragCompentClick()'
   @mousedown="mousedown($event, item)">
     <!-- <div class="field field_js field-active"> -->  
     <div class="prefabricatedCtn prefabricatedUp" v-if="item.upActive"></div>
@@ -79,7 +78,8 @@ export default {
       'updateCenterDraggingItemData',
       'updateCenterDraggingItemData',
       'updateInitPositionY',
-      'updateIsNeedUpdateDate']),
+      'updateIsNeedUpdateDate',
+      'changeActiveStatue']),
    emitUpdatePositionY: function (index) {
      this.updatePositionY(index)
    },
@@ -97,10 +97,13 @@ export default {
    emitUpdateIsNeedUpdateDate: function (bool) {
      this.updateIsNeedUpdateDate(bool)
    },
+   emitChangeActiveStatue: function () {
+    this.changeActiveStatue(this.index)
+   },
     mousedown: function (event, site) {
       var _this = this
       var _site = site
-      var positionY = ''
+      var isRealMoving = false // 是否移动了 移动了就不触发active  没有移动 相当于click 才增加active class
       var event=event||window.event;
       var _target = event.currentTarget
 
@@ -132,6 +135,7 @@ export default {
         event.returnValue=false;
       };
         document.onmousemove=function (ev) {
+          isRealMoving = true
           if (_this.ismoving) {
             _target.style.border = '1px dashed red'
             // _this.isShowPointEventNone = true
@@ -202,7 +206,7 @@ export default {
                 _this.ismoving =false
                 // console.log('max   ' + formViewDataLength)
                 // _this.emitUpdatePositionY(formViewDataLength - 1)
-                positionY = formViewDataLength - 1
+                // positionY = formViewDataLength - 1
                 return false
               }
               for (let i = 0; i < formViewDataLength; i++) {
@@ -227,9 +231,6 @@ export default {
                   _target.style.height = '0'
                    _target.style.border = ''
                    _this.ismoving =false
-                  //  console.log('上' + i)
-                  // _this.emitUpdatePositionY(i - 1)
-                  positionY = (i - 1) >= 0 ? (i - 1) : 0
                 }
                 if (boolWidth && boolHeightBottom) {
                   itemStoreM.position = 2
@@ -237,9 +238,6 @@ export default {
                   _target.style.height = '0'
                   _target.style.border = ''
                   _this.ismoving =false
-                  // console.log('下' + i)
-                  // _this.emitUpdatePositionY(i)
-                  positionY = i
                 }
               }
             }
@@ -252,19 +250,20 @@ export default {
           _target.style.border = ''
           _this.ismoving =false
           _this.isShowPointEventNone =false
-          // console.log(_this.vuexPositionY + ' ' + _this.vuexInitPositionY)
           _this.changeLayoutContentItem()
           _this.emitUpdateIsNeedUpdateDate(false)
           _this.emitUpdateItemIsMoving(false)
-          // console.log(positionY)
-           _this.emitUpdatePositionY(positionY)
-          // _this.emitUpdateCenterDraggingItemData('')
+          _this.emitUpdateCenterDraggingItemData('')
           document.onmouseup=null;
           _target.style.border=''
           _target.style.height = ''
           _target.style.background = ''
           // 置空后来加上去的样式
           childeNode.style.position=''
+          // 只有单纯的点击才增加active class 稍微移动的就不添加
+          if (!isRealMoving) {
+            _this.emitChangeActiveStatue()
+          }
          
         }
     },

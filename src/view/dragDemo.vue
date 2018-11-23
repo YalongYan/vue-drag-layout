@@ -41,16 +41,17 @@
           :key="index">
             <div v-if="item.componentKey === 'ColumnPanel' && item.size === '2'">
               <TwoColumns
-                :class="{'field-active': index == vuexPositionY}"
+                :class="{'field-active': item.active}"
                 @dragCompentClick='dragCompentClick(index)'
                 :item='item'
                 :index='index'/>
             </div>
             <div v-else>
-              <Single :class="{'field-active': index == vuexPositionY}"
+              <Single :class="{'field-active': item.active}"
                 @dragCompentClick='dragCompentClick(index)'
                 :item='item'
                 :index='index'/>
+                 <!-- {{item}} -->
             </div>
           </div>
           <div id='emptyHoverCtn' v-if="vuexEmptyHoverCtn"></div>
@@ -86,22 +87,15 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['updatePositionY']),
-    middleOnmouseEnter: function (event) {
-      // if (this.leftDragItemIsDraged) {
-      //   this.leftDragItemIsMoving = true
-      // }
-    },
+    ...mapActions(['updatePositionY', 'changeActiveStatue']),
     middleOnmouseOut: function (event) {
     },
     dragCompentClick: function(index) {
-      this.updatePositionY(index)
-    }
-    // ...mapActions(['updateLayoutContentItem'])
-    // ...mapActions(['updatePositionY']),
-    // emitUpdatePositionY: function (index) {
-    //   this.updatePositionY(index)
-    // },
+      this.emitChangeActiveStatue(index)
+    },
+    emitChangeActiveStatue: function (index) {
+      this.changeActiveStatue(index)
+    },
   },
   computed: {
     ...mapState({ 
@@ -126,14 +120,14 @@ export default {
     //   _this.layoutContentItem[0].downActive = false
     //   _this.layoutContentItem[1].upActive = true
     // },1000)
-  },
-  watch: {
-    vuexPositionY: {
-      handler: function (newVal, oldVal) {
-        console.log('newVal    ' + newVal)
-      }
-    }
   }
+  // watch: {
+  //   vuexPositionY: {
+  //     handler: function (newVal, oldVal) {
+  //       console.log('newVal    ' + newVal)
+  //     }
+  //   }
+  // }
 }
 </script>
 

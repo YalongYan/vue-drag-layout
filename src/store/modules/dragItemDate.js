@@ -4,6 +4,7 @@ const state = {
   // 只用了原数据的数组  对象里增加了 'upActive': false 'downActive': false 是用来控制红色边框的出现
   layoutContentItem: [
     {
+    'active': false,
 		"componentKey": "Text",
 		"title": "111111",
 		"fieldId": "20181108195717mCmp5TOBfA",
@@ -34,6 +35,7 @@ const state = {
     'downActive': false
   },
   {
+    'active': false,
 		"componentKey": "Text",
 		"title": "222222",
 		"fieldId": "20181108195717mCmp5TOBfA",
@@ -64,6 +66,7 @@ const state = {
     'downActive': false
   },
   {
+    'active': false,
 		"componentKey": "Text",
 		"title": "33333333",
 		"fieldId": "20181108195717mCmp5TOBfA",
@@ -94,6 +97,7 @@ const state = {
     'downActive': false
   },
   {
+    'active': false,
 		"componentKey": "Text",
 		"title": "4444444",
 		"fieldId": "20181108195717mCmp5TOBfA",
@@ -124,6 +128,7 @@ const state = {
     'downActive': false
   },
   {
+    'active': false,
 		"componentKey": "Text",
 		"title": "5555555",
 		"fieldId": "20181108195717mCmp5TOBfA",
@@ -154,6 +159,7 @@ const state = {
     'downActive': false
   },
   {
+    'active': false,
 		"componentKey": "Text",
 		"title": "66666666",
 		"fieldId": "20181108195717mCmp5TOBfA",
@@ -240,6 +246,9 @@ const actions = {
   },
   updateEmptyHoverCtn({commit}, bool) {
     commit('UPDATE_EMPTY_HOVER_CTN', bool);
+  },
+  changeActiveStatue({commit}, index) {
+    commit('CHANGE_ACTIVE_STATUE', index);
   }
 };
 
@@ -303,6 +312,7 @@ const mutations = {
     state.itemIsMoving = bool
   },
   ['CHANGE_LAYOUT_CONTENT_ITEM'](state, item) {
+    // 没有数据的时候 添加
     if (item) {
       var initData = []
       initData.push(item)
@@ -409,7 +419,17 @@ const mutations = {
   },
   ['UPDATE_EMPTY_HOVER_CTN'](state, bool) {
     state.emptyHoverCtn = bool
-  }
+  },
+  ['CHANGE_ACTIVE_STATUE'](state, index) {
+    console.log(index)
+    var data = state.layoutContentItem
+    for (var i = 0; i < data.length; i++) {
+      data[i].active = false
+    }
+    data[index].active = true
+    state.layoutContentItem = data
+    console.log(state.layoutContentItem)
+  },
 };
 
 export default {
