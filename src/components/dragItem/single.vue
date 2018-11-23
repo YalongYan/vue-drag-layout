@@ -156,6 +156,7 @@ export default {
             var endy=event.clientY-sb_bky;
 
             childeNode.style.left=endx+'px';
+            console.log(endy)
             childeNode.style.top=endy+'px';
             childeNode.style.width=targetWidth+'px';
             childeNode.style.height=targetHeight+'px';
@@ -267,7 +268,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss'>
 .form-view{
-  position: relative;
+  // position: relative;
   box-sizing: border-box;
   .field_js{
     border-bottom: 1px solid #ddd;
