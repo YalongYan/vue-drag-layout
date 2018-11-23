@@ -110,9 +110,9 @@ export default {
       var childeNode = this.$el.childNodes[2]
 
       _target.style.height = '90px'
-      
-      var startx=event.x;
-      var starty=event.y;
+      // 不能直接用 event.x 因为有兼容性问题
+      var startx=event.clientX;
+      var starty=event.clientY;
       var _offsetLeft = childeNode.offsetLeft
       var _offsetTop = childeNode.offsetTop
       // var starty=event.clientY;
@@ -159,18 +159,11 @@ export default {
             childeNode.style.top=endy+'px';
             childeNode.style.width=targetWidth+'px';
             childeNode.style.height=targetHeight+'px';
-            childeNode.style.position='fixed'
+            childeNode.style.position='absolute'
             childeNode.style.zIndex=2
             childeNode.style.background='white'
 
             var vuexPositionY = _this.vuexPositionY
-            // vuexPositionY 初始值 和mouseUp之后 都是 999   999代表刚开始拖动
-            // if (vuexPositionY === 999) {
-            //   var _index = _this.index
-            //   var item = {index: _index, position: 1}
-            //   _this.emitLayoutContentItem(item)
-            // }
-            
             // start 根据鼠标的位置 显示红边框
             var clientX = event.clientX
             var clientY = event.clientY
@@ -184,18 +177,6 @@ export default {
             var minHeightCtnLeft = parseInt($('#minHeightCtn')[0]['offsetLeft'])
             // 在区域内移动
             if ((clientX > minHeightCtnLeft && clientX < (minHeightCtnLeft + minHeightCtnWidth)) && (clientY >= minHeightCtnTop && clientY < (minHeightCtnTop + minHeightCtnHeight))) {
-              // 开始没数据 需要新增数据
-              // if (formViewDataLength === 0) {
-              //   _this.emitUpdateEmptyHoverCtn(true)
-              //   $('#emptyHoverCtn').show()
-              //   // var newItem = {"componentKey": "Text", "title": "新增的的的", "fieldId": "20181108195717mCmp5TOBfA", "inLeft": false, "required": false, "crux": true, "isTextArea": false, "hideTitle": false, "visible": false, 'upActive': false,'downActive': false}
-              //   // _this.emitChangeLayoutContentItem(newItem)
-              //   return false
-              // } else {
-              //   _this.emitUpdateEmptyHoverCtn(false)
-              // }
-              // 遍历组件 看鼠标在哪个组件内部 展示哪个红色的边框
-
               // 这是判断移动到最下面
               if ((clientY > (minHeightCtnTop + minHeightCtnHeight - 90)) && formViewDataLength > 0) {
                 itemStoreM.index = formViewDataLength - 1 
@@ -286,6 +267,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss'>
 .form-view{
+  position: relative;
   box-sizing: border-box;
   .field_js{
     border-bottom: 1px solid #ddd;

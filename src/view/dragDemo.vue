@@ -185,6 +185,7 @@ ul, li{
       min-height: 800px;
 
       #minHeightCtn{
+        // position: relative;
         padding-bottom: 90px;
         // border-bottom: 1px solid black;
         #emptyHoverCtn{
