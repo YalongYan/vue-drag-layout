@@ -5,7 +5,7 @@ const state = {
   layoutContentItem: [
     {
 		"componentKey": "Text",
-		"title": "文本000",
+		"title": "111111",
 		"fieldId": "20181108195717mCmp5TOBfA",
 		"inLeft": false,
 		"required": false,
@@ -35,7 +35,7 @@ const state = {
   },
   {
 		"componentKey": "Text",
-		"title": "文本11111",
+		"title": "222222",
 		"fieldId": "20181108195717mCmp5TOBfA",
 		"inLeft": false,
 		"required": false,
@@ -65,7 +65,97 @@ const state = {
   },
   {
 		"componentKey": "Text",
-		"title": "文本3333",
+		"title": "33333333",
+		"fieldId": "20181108195717mCmp5TOBfA",
+		"inLeft": false,
+		"required": false,
+		"crux": true,
+		"isTextArea": false,
+		"size": "large",
+		"borderColor": "",
+		"bacColor": "",
+		"titleFontColor": "",
+		"titleFontSize": 13,
+		"titleBold": false,
+		"titleUnderline": false,
+		"bacImg": null,
+		"tips": "",
+		"hideTitle": false,
+		"uniqueCheck": false,
+		"visible": false,
+		"calculate": false,
+		"calType": "2",
+		"complexCal": "",
+		"complexTrueVal": "",
+		"numberFields": "",
+		"numberFieldArr": [],
+    "columncode": "wb_1541678285948866",
+    'upActive': false,
+    'downActive': false
+  },
+  {
+		"componentKey": "Text",
+		"title": "4444444",
+		"fieldId": "20181108195717mCmp5TOBfA",
+		"inLeft": false,
+		"required": false,
+		"crux": true,
+		"isTextArea": false,
+		"size": "large",
+		"borderColor": "",
+		"bacColor": "",
+		"titleFontColor": "",
+		"titleFontSize": 13,
+		"titleBold": false,
+		"titleUnderline": false,
+		"bacImg": null,
+		"tips": "",
+		"hideTitle": false,
+		"uniqueCheck": false,
+		"visible": false,
+		"calculate": false,
+		"calType": "2",
+		"complexCal": "",
+		"complexTrueVal": "",
+		"numberFields": "",
+		"numberFieldArr": [],
+    "columncode": "wb_1541678285948866",
+    'upActive': false,
+    'downActive': false
+  },
+  {
+		"componentKey": "Text",
+		"title": "5555555",
+		"fieldId": "20181108195717mCmp5TOBfA",
+		"inLeft": false,
+		"required": false,
+		"crux": true,
+		"isTextArea": false,
+		"size": "large",
+		"borderColor": "",
+		"bacColor": "",
+		"titleFontColor": "",
+		"titleFontSize": 13,
+		"titleBold": false,
+		"titleUnderline": false,
+		"bacImg": null,
+		"tips": "",
+		"hideTitle": false,
+		"uniqueCheck": false,
+		"visible": false,
+		"calculate": false,
+		"calType": "2",
+		"complexCal": "",
+		"complexTrueVal": "",
+		"numberFields": "",
+		"numberFieldArr": [],
+    "columncode": "wb_1541678285948866",
+    'upActive': false,
+    'downActive': false
+  },
+  {
+		"componentKey": "Text",
+		"title": "66666666",
 		"fieldId": "20181108195717mCmp5TOBfA",
 		"inLeft": false,
 		"required": false,
@@ -161,7 +251,8 @@ const getters = {
   leftDragItemIsMoving: state => state.leftDragItemIsMoving,
   centerDraggingItemData: state => state.centerDraggingItemData,
   leftDraggingItemData: state => state.leftDraggingItemData,
-  emptyHoverCtn: state => state.emptyHoverCtn
+  emptyHoverCtn: state => state.emptyHoverCtn,
+  initPositionY: state => state.initPositionY
 };
 
 const mutations = {
@@ -220,15 +311,19 @@ const mutations = {
     }
     // 拖动中间的组件
     if (state.centerDraggingItemData) {
+      // console.log(1111)
       var isNeedUpdateDateIndex = ''
       for (var i = 0; i < state.layoutContentItem.length; i++) {
         if (state.layoutContentItem[i].upActive || state.layoutContentItem[i].downActive) {
           isNeedUpdateDateIndex = i
         }
       }
-      // 这是拖动 临界的位置 在临界位置
-      if (isNeedUpdateDateIndex == state.initPositionY) {
+      // console.log('isNeedUpdateDateIndex' + isNeedUpdateDateIndex + 'state.initPositionY' + state.initPositionY)
+      // 这是没拖动到其他组件  相当于点击了一下 稍微移动了一点点
+      if (!isNeedUpdateDateIndex && (isNeedUpdateDateIndex !== 0)) {
         state.isNeedUpdateDate = false
+      } else {
+        state.isNeedUpdateDate = true
       }
       // 可以触发更新
       if (state.isNeedUpdateDate) {
@@ -244,15 +339,17 @@ const mutations = {
             state.centerDraggingItemData.downActive = false
             data2.splice(i, 0, state.centerDraggingItemData)
             // 更新 positionY
-            state.positionY = i
+            // state.positionY = i
+            // console.log(state.positionY)
             break
-          }
+          } else 
           if (downActive) {
             state.centerDraggingItemData.upActive = false
             state.centerDraggingItemData.downActive = false
             data2.splice(i + 1, 0, state.centerDraggingItemData)
             // 更新 positionY
-            state.positionY = i + 1
+            // state.positionY = i + 1
+            // console.log(state.positionY)
             break
           }
         }
@@ -260,13 +357,14 @@ const mutations = {
       }
       var data3 = state.layoutContentItem
       for (let i = 0; i < data3.length; i ++) {
-          data3[i].downActive = false
-          data3[i].upActive = false
+        data3[i].downActive = false
+        data3[i].upActive = false
       }
       state.layoutContentItem = data3
     }
     // 拖动左侧的组件
     if (state.leftDraggingItemData) {
+      console.log(1)
       var title = state.leftDraggingItemData.title
       var obj = {}
       obj['title'] = title
@@ -300,6 +398,7 @@ const mutations = {
   },
   ['UPDATE_CENTER_DRAGGING_ITEM_DATA'](state, item) {
     state.centerDraggingItemData = item
+    // console.log(state.centerDraggingItemData)
   },
   ['UPDATE_LEFT_DRAGGING_ITEM_DATA'](state, item) {
     state.leftDraggingItemData = item

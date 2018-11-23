@@ -55,7 +55,8 @@ export default {
       vuexPositionY: state => state.dragItemDate.positionY,
       vuexItemIsMoving: state => state.dragItemDate.itemIsMoving,
       vuexLeftDragItemIsMoving: state => state.dragItemDate.leftDragItemIsMoving,
-      vuexLayoutContentItem: state => state.dragItemDate.layoutContentItem
+      vuexLayoutContentItem: state => state.dragItemDate.layoutContentItem,
+      vuexInitPositionY: state => state.dragItemDate.initPositionY
       // vuexCenterDraggingItemData: state => state.dragItemDate.centerDraggingItemData
     }),
   },
@@ -67,12 +68,18 @@ export default {
        positionY初始  mouseup 都是 999 
        移动的最高 最低 位置边界 在single.vue dragConmpent.vue 每个组件的 move 里面
     */
-  //   ...mapActions(['updatePositionY']),
-  // emitUpdateLayoutContentItem
-    emitLayoutContentItem: function (item) {
+    emitUpdateLayoutContentItem: function (item) {
       this.updateLayoutContentItem(item)
     },
-    ...mapActions(['updateLayoutContentItem', 'updatePositionY', 'updateItemIsMoving', 'changeLayoutContentItem', 'updateCenterDraggingItemData', 'updateCenterDraggingItemData', 'updateInitPositionY', 'updateIsNeedUpdateDate']),
+    ...mapActions([
+      'updateLayoutContentItem',
+      'updatePositionY',
+      'updateItemIsMoving',
+      'changeLayoutContentItem',
+      'updateCenterDraggingItemData',
+      'updateCenterDraggingItemData',
+      'updateInitPositionY',
+      'updateIsNeedUpdateDate']),
    emitUpdatePositionY: function (index) {
      this.updatePositionY(index)
    },
@@ -90,61 +97,10 @@ export default {
    emitUpdateIsNeedUpdateDate: function (bool) {
      this.updateIsNeedUpdateDate(bool)
    },
-  //  middleOnmouseEnter: function (event) {
-  //   //  console.log(this.vuexLeftDragItemIsMoving)
-  //   // 中间的组件拖动进入
-  //   if (this.vuexItemIsMoving) {
-  //     var vuexPositionY = this.vuexPositionY
-  //     var _index = this.index
-  //     var item = {index: _index, position: ''}
-  //     if (_index > vuexPositionY) {
-  //       item.position = 1
-  //     } else {
-  //       item.position = 2
-  //     }
-  //     this.emitLayoutContentItem(item)
-  //     this.emitUpdatePositionY(this.index)
-  //     this.emitUpdateIsNeedUpdateDate(true)
-  //   }else if (this.vuexLeftDragItemIsMoving) {
-  //     // 左侧组件拖动进入
-  //      if (this.vuexPositionY !== 999) {
-  //       var vuexPositionY = this.vuexPositionY
-  //       var _index = this.index
-  //       var item = {index: _index, position: ''}
-  //       if (_index > vuexPositionY) {
-  //         item.position = 1
-  //       } else {
-  //         item.position = 2
-  //       }
-  //       this.emitLayoutContentItem(item)
-  //     } else {
-  //       var middleHeaderHeight = 30
-  //       var middleItemHeight = 90
-  //       var middleVertalHeigth = this.index * middleItemHeight + middleHeaderHeight + middleItemHeight/2
-  //       var _index = this.index
-  //       var item = {index: _index, position: ''}
-  //       if (event.y < middleVertalHeigth) {
-  //         item.position = 1
-  //       } else {
-  //         item.position = 2
-  //       }
-  //       this.emitLayoutContentItem(item)
-  //     }
-  //   }
-  //  },
-  //  middleOnmouseLeave: function (event) {
-  //   var _target = event.currentTarget
-  //   this.ismoving = false
-  //   // this.isShowPointEventNone = false
-  //   // 加上这个的原因是 dom操作比vuexd的数据变化快 不加这个 这段代码就比vuex的数据变化先执行 出现闪屏现象
-  //   setTimeout(function () {
-  //     _target.style.height = ''
-  //     _target.style.border = ''
-  //   }, 0)
-  //  },
     mousedown: function (event, site) {
       var _this = this
       var _site = site
+      var positionY = ''
       var event=event||window.event;
       var _target = event.currentTarget
 
@@ -154,7 +110,6 @@ export default {
       
       var startx=event.x;
       var starty=event.y;
-      // console.log(this)
       var _offsetLeft = childeNode.offsetLeft
       var _offsetTop = childeNode.offsetTop
       // var starty=event.clientY;
@@ -166,6 +121,7 @@ export default {
       var targetWidth = this.$el.clientWidth
       var targetHeight = this.$el.clientHeight
       this.ismoving = true
+      _this.emitUpdateInitPositionY(_this.index)
       // this.isShowPointEventNone = true
       this.emitUpdateItemIsMoving(true)
 
@@ -175,19 +131,17 @@ export default {
       } else{
         event.returnValue=false;
       };
-        // var scrolltop=document.documentElement.scrol
         document.onmousemove=function (ev) {
-          // if (_this.ismoving) {
-          //   _target.style.border = '1px dashed red'
-          //   _this.isShowPointEventNone = true
-          // } else {
-          //   _target.style.border = ''
-          // }
-          console.log(_this.vuexItemIsMoving)
+          if (_this.ismoving) {
+            _target.style.border = '1px dashed red'
+            // _this.isShowPointEventNone = true
+          } else {
+            _target.style.border = ''
+          }
           if (_this.vuexItemIsMoving) {
+            //  _target.style.border = '1px dashed red'
             _this.emitUpdateCenterDraggingItemData(_this.item)
             // _this.emitUpdateInitPositionY(_this.index)
-            // _this.emitUpdatePositionY(_this.index)
             var item = {index: _this.index, position: 1}
             var event=ev||window.event;
             if (event.clientY < 0 || event.clientX < 0 || event.clientY > wh || event.clientX > ww) {
@@ -207,53 +161,104 @@ export default {
 
             var vuexPositionY = _this.vuexPositionY
             // vuexPositionY 初始值 和mouseUp之后 都是 999   999代表刚开始拖动
-            if (vuexPositionY === 999) {
-              var _index = _this.index
-              var item = {index: _index, position: 1}
-              _this.emitLayoutContentItem(item)
-            }
+            // if (vuexPositionY === 999) {
+            //   var _index = _this.index
+            //   var item = {index: _index, position: 1}
+            //   _this.emitLayoutContentItem(item)
+            // }
+            
             // start 根据鼠标的位置 显示红边框
             var clientX = event.clientX
             var clientY = event.clientY
             var formViewData = $(".form-view")
             var formViewDataLength = formViewData.length
             var itemStoreM = {index: '', position: ''}
-            for (let i = 0; i < formViewDataLength; i++) {
-              itemStoreM.index = i
-              var thisDom = formViewData[i]
-              var offsetLeft = parseInt(formViewData[i].offsetLeft)
-              var offsetTop = parseInt(formViewData[i].offsetTop)
-              var offsetHeight = parseInt(formViewData[i].offsetHeight)
-              var offsetWidth = parseInt(formViewData[i].offsetWidth)
-              var boolWidth = clientX > offsetLeft && clientX < (offsetLeft + offsetWidth)
-              // 上半部分
-              var boolHeightTop = clientY > offsetTop && clientY < (offsetTop + offsetHeight/2)
-              // 下半部分
-              var boolHeightBottom = clientY > (offsetTop + offsetHeight/2) && clientY < (offsetTop + offsetHeight)
-              if (boolWidth && boolHeightTop) {
-                // console.log(i)
-                itemStoreM.position = 1
-                // console.log(itemStoreM)
-                // _this.emitLayoutContentItem(itemStoreM)
-              }
-              if (boolWidth && boolHeightBottom) {
-                // console.log(i + 1)
+            // minHeightCtn 的高度会实时更新
+            var minHeightCtnHeight = parseInt($('#minHeightCtn')[0]['clientHeight'])
+            var minHeightCtnWidth = parseInt($('#minHeightCtn')[0]['clientWidth'])
+            var minHeightCtnTop = parseInt($('#minHeightCtn')[0]['offsetTop'])
+            var minHeightCtnLeft = parseInt($('#minHeightCtn')[0]['offsetLeft'])
+            // 在区域内移动
+            if ((clientX > minHeightCtnLeft && clientX < (minHeightCtnLeft + minHeightCtnWidth)) && (clientY >= minHeightCtnTop && clientY < (minHeightCtnTop + minHeightCtnHeight))) {
+              // 开始没数据 需要新增数据
+              // if (formViewDataLength === 0) {
+              //   _this.emitUpdateEmptyHoverCtn(true)
+              //   $('#emptyHoverCtn').show()
+              //   // var newItem = {"componentKey": "Text", "title": "新增的的的", "fieldId": "20181108195717mCmp5TOBfA", "inLeft": false, "required": false, "crux": true, "isTextArea": false, "hideTitle": false, "visible": false, 'upActive': false,'downActive': false}
+              //   // _this.emitChangeLayoutContentItem(newItem)
+              //   return false
+              // } else {
+              //   _this.emitUpdateEmptyHoverCtn(false)
+              // }
+              // 遍历组件 看鼠标在哪个组件内部 展示哪个红色的边框
+
+              // 这是判断移动到最下面
+              if ((clientY > (minHeightCtnTop + minHeightCtnHeight - 90)) && formViewDataLength > 0) {
+                itemStoreM.index = formViewDataLength - 1 
                 itemStoreM.position = 2
-                // console.log(itemStoreM)
-                // _this.emitLayoutContentItem(itemStoreM)
+                _this.emitUpdateLayoutContentItem(itemStoreM)
+                _target.style.height = '0'
+                _target.style.border = ''
+                _this.ismoving =false
+                // console.log('max   ' + formViewDataLength)
+                // _this.emitUpdatePositionY(formViewDataLength - 1)
+                positionY = formViewDataLength - 1
+                return false
+              }
+              for (let i = 0; i < formViewDataLength; i++) {
+                // 没有移动到其他组件
+                if (_this.vuexInitPositionY === i) {
+                  continue
+                }
+                itemStoreM.index = i
+                var thisDom = formViewData[i]
+                var offsetLeft = parseInt(thisDom['offsetLeft'])
+                var offsetTop = parseInt(thisDom['offsetTop'])
+                var clientHeight = 90 // 固定是90px
+                var offsetWidth = parseInt(formViewData[i].clientWidth)
+                var boolWidth = clientX > offsetLeft && clientX < (offsetLeft + offsetWidth)
+                // 上半部分
+                var boolHeightTop = clientY > offsetTop && clientY < (offsetTop + clientHeight/2)
+                // 下半部分
+                var boolHeightBottom = clientY > (offsetTop + clientHeight/2) && clientY < (offsetTop + clientHeight)
+                if (boolWidth && boolHeightTop) {
+                  itemStoreM.position = 1
+                  _this.emitUpdateLayoutContentItem(itemStoreM)
+                  _target.style.height = '0'
+                   _target.style.border = ''
+                   _this.ismoving =false
+                  //  console.log('上' + i)
+                  // _this.emitUpdatePositionY(i - 1)
+                  positionY = (i - 1) >= 0 ? (i - 1) : 0
+                }
+                if (boolWidth && boolHeightBottom) {
+                  itemStoreM.position = 2
+                  _this.emitUpdateLayoutContentItem(itemStoreM)
+                  _target.style.height = '0'
+                  _target.style.border = ''
+                  _this.ismoving =false
+                  // console.log('下' + i)
+                  // _this.emitUpdatePositionY(i)
+                  positionY = i
+                }
               }
             }
-            // end 根据鼠标的位置 显示红边框
+
+            
           }
         }
         document.onmouseup=function (ev) {
+          _target.style.height = '0'
+          _target.style.border = ''
           _this.ismoving =false
           _this.isShowPointEventNone =false
-          // _this.emitUpdatePositionY(999)
+          // console.log(_this.vuexPositionY + ' ' + _this.vuexInitPositionY)
           _this.changeLayoutContentItem()
           _this.emitUpdateIsNeedUpdateDate(false)
           _this.emitUpdateItemIsMoving(false)
-          _this.emitUpdateCenterDraggingItemData('')
+          // console.log(positionY)
+           _this.emitUpdatePositionY(positionY)
+          // _this.emitUpdateCenterDraggingItemData('')
           document.onmouseup=null;
           _target.style.border=''
           _target.style.height = ''

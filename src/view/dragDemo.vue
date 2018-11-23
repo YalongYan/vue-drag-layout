@@ -58,7 +58,7 @@
     </div>
     </div>
     <div class="rigthCtn">
-      <ShowDetails/>
+      <!-- <ShowDetails/> -->
     </div>
   </div>
 </template>
@@ -96,12 +96,12 @@ export default {
     },
     dragCompentClick: function(index) {
       this.updatePositionY(index)
-    },
+    }
     // ...mapActions(['updateLayoutContentItem'])
-    ...mapActions(['updatePositionY']),
-    emitUpdatePositionY: function (index) {
-      this.updatePositionY(index)
-    },
+    // ...mapActions(['updatePositionY']),
+    // emitUpdatePositionY: function (index) {
+    //   this.updatePositionY(index)
+    // },
   },
   computed: {
     ...mapState({ 
@@ -126,15 +126,14 @@ export default {
     //   _this.layoutContentItem[0].downActive = false
     //   _this.layoutContentItem[1].upActive = true
     // },1000)
+  },
+  watch: {
+    vuexPositionY: {
+      handler: function (newVal, oldVal) {
+        console.log('newVal    ' + newVal)
+      }
+    }
   }
-  // watch: {
-  //   list1: {
-  //     handler: function (newVal, oldVal) {
-  //       console.log('bbbbbb')
-  //     },
-  //     deep: true
-  //   }
-  // },
 }
 </script>
 
