@@ -1,6 +1,6 @@
 # vue-slicksort-practice
 ### 目前的效果如下，待续...
-![](https://img2018.cnblogs.com/blog/872412/201811/872412-20181120210622911-737195316.gif)
+![https://img2018.cnblogs.com/blog/872412/201811/872412-20181120210622911-737195316.gif](https://img2018.cnblogs.com/blog/872412/201811/872412-20181120210622911-737195316.gif)
 
 > A Vue.js project
 
