@@ -1,5 +1,5 @@
 # vue-slicksort-practice
-### 目前的效果如下，待续...
+### 目前的效果如下
 ![https://raw.githubusercontent.com/YalongYan/vue-drag-layout/master/src/assets/show.gif](https://raw.githubusercontent.com/YalongYan/vue-drag-layout/master/src/assets/show.gif)
 
 > A Vue.js project
