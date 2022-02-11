@@ -11,7 +11,7 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "ajv": "^6.0.0",
+    "ajv": "^6.12.3",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue-slicksort": "^0.1.10",
